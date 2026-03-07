@@ -1,4 +1,4 @@
-# O.N.I.: Acts of Omission
+# O.N.I. Acts of Omission
 
 ---
 # About
