@@ -6,39 +6,37 @@ using UnityEngine;
 
 public class DragDrop : MonoBehaviour
 {
-
     // --- Private Fields ---
     private bool _isDragging = false;
     private Vector2 _mousePosition;
     private Vector2 _dragOffset;
 
-    // Update is called once per frame
     void Update()
     {
+        // Convert mouse screen space to world coordinates
         _mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         UpdateObjectPosition();
     }
 
-    //Detect when mouse holds down on object
     private void OnMouseDown()
     {
-        //Asset must be offset from mouse a certain distance
-        //to give illusion of picking up, instead of teleporting to middle of asset
         _mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        // Calculate distance between mouse and object center to prevent snapping
         _dragOffset = _mousePosition - (Vector2)transform.position;
 
         _isDragging = true;
     }
 
-    //Detect when mouse does not hold
     private void OnMouseUp()
     {
-        _isDragging = false;
+        _isDragging = false; // Stop dragging on release
     }
 
-    private void UpdateObjectPosition() {
+    private void UpdateObjectPosition()
+    {
         if (!_isDragging) return;
 
+        // Apply movement while maintaining original Z depth
         float newXPos = _mousePosition.x - _dragOffset.x;
         float newYPos = _mousePosition.y - _dragOffset.y;
         transform.position = new Vector3(newXPos, newYPos, transform.position.z);

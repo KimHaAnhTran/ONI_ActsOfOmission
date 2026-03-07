@@ -12,34 +12,37 @@ public class SortDocuments : MonoBehaviour
     {
         _documents.Clear();
         float zIndex = 0f;
-        foreach (Transform child in transform.parent) {
+        // Initialize list and stack children along the Z axis
+        foreach (Transform child in transform.parent)
+        {
             zIndex -= 0.1f;
             _documents.Add(child.gameObject);
             child.localPosition = new Vector3(child.localPosition.x, child.localPosition.y, zIndex);
-
         }
     }
+
     private void OnMouseDown()
     {
+        // Move clicked object to the end of the list (top of stack)
         _documents.Remove(this.gameObject);
         _documents.Add(this.gameObject);
         updateHierarchy();
 
+        // Ensure current object is visually in front
         int documentsCount = _documents.Count;
         transform.localPosition = new Vector3(transform.localPosition.x, transform.localPosition.y, documentsCount * -.1f);
     }
 
-
-    //Code is so much shorter than last time I did it!!!
-    private void updateHierarchy() {
+    private void updateHierarchy()
+    {
         float zIndex = 0f;
 
+        // Re-sort all documents' Z positions based on list order
         foreach (GameObject child in _documents)
         {
             zIndex -= 0.1f;
             Transform childPos = child.transform;
             childPos.localPosition = new Vector3(childPos.localPosition.x, childPos.localPosition.y, zIndex);
         }
-
     }
 }
