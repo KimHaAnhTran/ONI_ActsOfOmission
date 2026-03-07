@@ -28,9 +28,6 @@ public class SortDocuments : MonoBehaviour
         _documents.Add(this.gameObject);
         updateHierarchy();
 
-        // Ensure current object is visually in front
-        int documentsCount = _documents.Count;
-        transform.localPosition = new Vector3(transform.localPosition.x, transform.localPosition.y, documentsCount * -.1f);
     }
 
     private void updateHierarchy()
