@@ -30,6 +30,7 @@ public class SortDocuments : MonoBehaviour
     }
 
 
+    //Code is so much shorter than last time I did it!!!
     private void updateHierarchy() {
         float zIndex = 0f;
 
