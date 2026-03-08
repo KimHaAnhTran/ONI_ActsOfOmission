@@ -6,7 +6,8 @@ using UnityEngine;
 public class TextType : MonoBehaviour
 {
     private TextMeshProUGUI _textMesh;
-
+    private bool _canType;
+    
     void Start()
     {
         // Get the component at the start
@@ -15,6 +16,9 @@ public class TextType : MonoBehaviour
 
     void Update()
     {
+        _canType = TypewriterKey.CanType;
+
+        if (!_canType) return;
         // inputString captures everything typed this frame
         foreach (char c in Input.inputString)
         {

@@ -1,29 +1,62 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 public class TypewriterKey : MonoBehaviour
 {
+    public static event Action<bool> OnCanTypeChanged;
+
     [SerializeField] private KeyCode _keyInput = KeyCode.None;
     private Vector3 _ogPos, _shiftPos;
+    private SpriteRenderer _spriteRenderer;
+    private Color32 _spriteColor;
 
-    private void Start()
+    private static bool _canType = false;
+    public static bool CanType
     {
-        _ogPos = transform.position;
-        _shiftPos = new Vector3(_ogPos.x, _ogPos.y - .03f, _ogPos.z);
+        get => _canType;
+        set
+        {
+            if (_canType == value) return;
+            _canType = value;
+            OnCanTypeChanged?.Invoke(_canType);
+        }
     }
 
-    void Update()
+    private void Awake()
     {
-        // Move key down while held
-        if (Input.GetKey(_keyInput))
-        {
-            transform.position = _shiftPos;
-        }
-        else
-        {
-            // Return to original position when released
-            transform.position = _ogPos;
-        }
+        _spriteRenderer = GetComponent<SpriteRenderer>();
+        _ogPos = transform.position;
+        _shiftPos = _ogPos + new Vector3(0, -0.03f, 0);
+
+        // Ensure we grab the color early
+        if (_spriteRenderer != null) _spriteColor = _spriteRenderer.color;
+    }
+
+    private void OnEnable()
+    {
+        OnCanTypeChanged += UpdateVisuals;
+        // Force the visual update immediately upon enabling
+        UpdateVisuals(_canType);
+    }
+
+    private void OnDisable()
+    {
+        OnCanTypeChanged -= UpdateVisuals;
+    }
+
+    private void UpdateVisuals(bool canTypeState)
+    {
+        if (_spriteRenderer == null) return;
+
+        _spriteColor.a = canTypeState ? (byte)255 : (byte)50;
+        _spriteRenderer.color = _spriteColor;
+    }
+
+    private void Update()
+    {
+        // Only allow movement if typing is enabled
+        if (!_canType) return;
+
+        transform.position = Input.GetKey(_keyInput) ? _shiftPos : _ogPos;
     }
 }
