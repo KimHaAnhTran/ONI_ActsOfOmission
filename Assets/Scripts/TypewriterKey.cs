@@ -13,14 +13,16 @@ public class TypewriterKey : MonoBehaviour
         _shiftPos = new Vector3(_ogPos.x, _ogPos.y - .03f, _ogPos.z);
     }
 
-    // Update is called once per frame
     void Update()
     {
+        // Move key down while held
         if (Input.GetKey(_keyInput))
         {
             transform.position = _shiftPos;
         }
-        else {
+        else
+        {
+            // Return to original position when released
             transform.position = _ogPos;
         }
     }
