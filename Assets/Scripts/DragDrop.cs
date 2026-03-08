@@ -20,6 +20,9 @@ public class DragDrop : MonoBehaviour
         // Convert mouse screen space to world coordinates
         _mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         UpdateObjectPosition();
+        if (Input.GetMouseButtonUp(0)) {
+            _isDragging = false;
+        }
     }
 
     private void OnMouseDown()

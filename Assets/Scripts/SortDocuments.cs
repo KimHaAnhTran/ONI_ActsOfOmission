@@ -26,6 +26,10 @@ public class SortDocuments : MonoBehaviour
 
     private void OnMouseDown()
     {
+        OnClick();
+    }
+
+    public void OnClick() {
         _documents.Remove(this.gameObject); // Remove from list to re-insert at top
         CreateShadowClone();
         _documents.Add(this._shadow); // Add shadow just below host
@@ -50,6 +54,7 @@ public class SortDocuments : MonoBehaviour
         // Clean up list & remove shadow
         _documents.Remove(_shadow);
         Destroy(_shadow);
+
     }
 
     private void updateHierarchy()
