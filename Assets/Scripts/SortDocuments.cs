@@ -41,6 +41,12 @@ public class SortDocuments : MonoBehaviour
 
     private void OnMouseUp()
     {
+        
+        ClearShadow();
+    }
+
+    public void ClearShadow()
+    {
         // Clean up list & remove shadow
         _documents.Remove(_shadow);
         Destroy(_shadow);
@@ -61,23 +67,29 @@ public class SortDocuments : MonoBehaviour
 
     private void CreateShadowClone()
     {
-        // 1. Create the clone with a slight offset
+        // Create the clone with a slight offset
         Vector3 offset = new Vector3(-.1f, -.1f, 0f);
         _shadow = Instantiate(this.gameObject, transform.position + offset, transform.rotation, transform.parent);
         _shadow.name = "Shadow";
 
-        // 2. Strip scripts to prevent clone logic from running
+        // Strip scripts to prevent clone logic from running
         MonoBehaviour[] scripts = _shadow.GetComponents<MonoBehaviour>();
         foreach (var script in scripts)
         {
             Destroy(script);
         }
 
-        // 3. Disable physics/interaction on shadow
+        // Remove all children from shadow
+        foreach (Transform child in _shadow.transform)
+        {
+            Destroy(child.gameObject);
+        }
+
+        // Disable physics/interaction on shadow
         BoxCollider2D collider = _shadow.GetComponent<BoxCollider2D>();
         if (collider != null) Destroy(collider);
 
-        // 4. Visual styling for the "shadow" effect
+        // Visual styling for the "shadow" effect
         SpriteRenderer sr = _shadow.GetComponent<SpriteRenderer>();
         if (sr != null)
         {

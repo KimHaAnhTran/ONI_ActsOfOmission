@@ -11,7 +11,11 @@ public class DragDrop : MonoBehaviour
     private Vector2 _mousePosition;
     private Vector2 _dragOffset;
 
-    void Update()
+    public bool IsDragging {
+        get { return _isDragging; }
+        set { _isDragging = value; }
+    }
+    private void Update()
     {
         // Convert mouse screen space to world coordinates
         _mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
@@ -41,4 +45,5 @@ public class DragDrop : MonoBehaviour
         float newYPos = _mousePosition.y - _dragOffset.y;
         transform.position = new Vector3(newXPos, newYPos, transform.position.z);
     }
+
 }
