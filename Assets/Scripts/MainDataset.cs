@@ -16,23 +16,30 @@ public static class MainDataset
 
     private static void LoadData()
     {
+        // Load from Resources folder Documents.txt
         TextAsset textFile = Resources.Load<TextAsset>("Documents");
-
+        
         if (textFile == null)
         {
             Debug.LogError("MainDataset: Documents.txt not found in Resources!");
             return;
         }
 
+        // Clear DocumentGroups for new adding
         DocumentGroups.Clear();
+
+        // Standard recognition of New Line
         string[] allLines = textFile.text.Split(new[] { "\r\n", "\r", "\n" }, System.StringSplitOptions.None);
 
+        // Create temporrary List<string> to add onto DocumentGroups
         List<string> currentGroup = new List<string>();
 
         foreach (string line in allLines)
         {
+            // Removes dead white space and takes one line
             string trimmedLine = line.Trim();
 
+            // New document group whenever "//"
             if (trimmedLine == "//")
             {
                 if (currentGroup.Count > 0)
@@ -41,17 +48,20 @@ public static class MainDataset
                     currentGroup.Clear();
                 }
             }
+            // Otherwise, add document to current group
             else if (!string.IsNullOrWhiteSpace(trimmedLine))
             {
                 currentGroup.Add(trimmedLine);
             }
         }
 
+        // Because there's no "//" at the end of Documents.txt
+        // This acts as safety net, adds final group to DocumentGroups
         if (currentGroup.Count > 0)
         {
             DocumentGroups.Add(currentGroup);
         }
-
+        
         Debug.Log($"<color=cyan>MainDataset Loaded:</color> {DocumentGroups.Count} groups ready.");
 
         // --- DEBUG PRINT START ---
