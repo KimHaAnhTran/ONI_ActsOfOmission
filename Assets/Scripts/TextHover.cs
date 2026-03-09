@@ -3,42 +3,53 @@ using UnityEngine;
 public class TextHover : MonoBehaviour
 {
     [SerializeField] private GameObject _highlights;
+    [SerializeField] private Texture2D _handCursorTexture;
+
     private bool _isHover = false;
-    private bool _isPressed = false;
+    private bool _isLocked = false;
 
-    private Texture2D _handCursorTexture; // Defaults null, you have to [SerializeField] a hand symbol
-                                          // Because Unity doesn't have a hand cursor like web
+    private void Start() => _highlights.SetActive(false);
 
-    public bool IsHover
+    private void OnEnable()
     {
-        get { return _isHover; }
-        set { _isHover = value; }
+        // Listen for the static event from TextType
+        TextType.OnCurrentDocumentFinished += HandleDocumentFinished;
     }
 
-    private void Start()
+    private void OnDisable()
     {
-        _highlights.SetActive(false);
+        TextType.OnCurrentDocumentFinished -= HandleDocumentFinished;
+    }
+
+    private void HandleDocumentFinished()
+    {
+        // If this doc was the one active, lock it permanently
+        if (_isHover) LockHighlight();
+    }
+
+    public void LockHighlight()
+    {
+        _isLocked = true;
+        _highlights.SetActive(true);
+        // Return cursor to normal since we can't click it again
+        Cursor.SetCursor(null, Vector2.zero, CursorMode.Auto);
     }
 
     public void OnMouseEnter()
     {
+        if (_isLocked) return;
+
         _highlights.SetActive(true);
         _isHover = true;
-        _isPressed = TypewriterKey.CanType;
-
-        // Change to Hand Cursor
-        // If _handCursorTexture is null, Unity usually defaults to the OS pointer
-        // For a true "Hand" look, it's best to provide a small 32x32 UI sprite
         Cursor.SetCursor(_handCursorTexture, Vector2.zero, CursorMode.Auto);
     }
 
     public void OnMouseExit()
     {
-        // Reset to default arrow
-        Cursor.SetCursor(null, Vector2.zero, CursorMode.Auto);
-
-        if (_isPressed) return;
-        _highlights.SetActive(false);
         _isHover = false;
+        if (_isLocked) return; // THE FIX: If locked, stay visible!
+
+        _highlights.SetActive(false);
+        Cursor.SetCursor(null, Vector2.zero, CursorMode.Auto);
     }
 }

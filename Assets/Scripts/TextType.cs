@@ -2,9 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using System;
 
 public class TextType : MonoBehaviour
 {
+    public static event Action OnCurrentDocumentFinished; // New event to lock highlights
+
     private TextMeshProUGUI _textMesh;
     private bool _canType;
 
@@ -22,7 +25,6 @@ public class TextType : MonoBehaviour
 
     private string TargetWord => (_allWords != null && _wordIndex < _allWords.Length) ? _allWords[_wordIndex] : "";
 
-    
     void Awake()
     {
         _textMesh = GetComponent<TextMeshProUGUI>();
@@ -32,6 +34,7 @@ public class TextType : MonoBehaviour
 
     private void Start()
     {
+        // For testing: grabs Group 0, Doc 0
         if (MainDataset.DocumentGroups.Count > 0)
         {
             _allWords = MainDataset.DocumentGroups[0][0].Split(' ');
@@ -64,7 +67,7 @@ public class TextType : MonoBehaviour
 
         foreach (char c in Input.inputString)
         {
-            if (c == '\b') // Backspace
+            if (c == '\b')
             {
                 if (_currentInput.Length > 0)
                 {
@@ -72,7 +75,7 @@ public class TextType : MonoBehaviour
                     ValidateInput();
                 }
             }
-            else if (c == ' ' || c == '\n' || c == '\r') // Space/Enter
+            else if (c == ' ' || c == '\n' || c == '\r')
             {
                 if (!_hasMistake && _currentInput == TargetWord)
                 {
@@ -84,31 +87,34 @@ public class TextType : MonoBehaviour
                 }
                 else
                 {
-                    TriggerShake(); // Shake if they try to space/enter on a wrong word
+                    TriggerShake();
                 }
             }
-            else // Character Input
+            else
             {
                 if (!_hasMistake)
                 {
                     _currentInput += c;
                     ValidateInput();
-
-                    if (_hasMistake) TriggerShake(); // Shake exactly when they make the mistake
+                    if (_hasMistake) TriggerShake();
                 }
                 else
                 {
-                    TriggerShake(); // Shake if they keep typing while locked
+                    TriggerShake();
                 }
             }
         }
-
         UpdateVisuals();
     }
 
     private void ValidateInput()
     {
+        bool wasMistake = _hasMistake;
         _hasMistake = !TargetWord.StartsWith(_currentInput);
+
+        // Notify the Typewriter Hand to jam or unjam
+        if (wasMistake != _hasMistake)
+            TypewriterKey.SetMistakeState(_hasMistake);
     }
 
     private void UpdateVisuals()
@@ -127,22 +133,19 @@ public class TextType : MonoBehaviour
         }
     }
 
-    // For when player types wrong, text will shake
     private void TriggerShake()
     {
         if (_shakeCoroutine != null) StopCoroutine(_shakeCoroutine);
         _shakeCoroutine = StartCoroutine(ShakeRoutine());
     }
 
-    // Using coroutine for durations
     private IEnumerator ShakeRoutine()
     {
         float elapsed = 0f;
         while (elapsed < _shakeDuration)
         {
-            float xOffset = Random.Range(-1f, 1f) * _shakeAmount;
+            float xOffset = UnityEngine.Random.Range(-1f, 1f) * _shakeAmount;
             transform.localPosition = new Vector3(_originalLocalPos.x + xOffset, _originalLocalPos.y, _originalLocalPos.z);
-
             elapsed += Time.deltaTime;
             yield return null;
         }
@@ -152,6 +155,8 @@ public class TextType : MonoBehaviour
     private void FinishDocument()
     {
         TypewriterKey.CanType = false;
+        TypewriterKey.SetMistakeState(false); // Unjam hand for next paper
+        OnCurrentDocumentFinished?.Invoke(); // Lock the highlight
         _wordIndex = 0;
     }
 }
