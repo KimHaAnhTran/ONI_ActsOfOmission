@@ -1,0 +1,13 @@
+fileFormatVersion: 2
+guid: 04179035efb82da46a866473de2a0eaa
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - _paperPrefab: {fileID: 1737492353534611442, guid: a98728e2409787f41b3d870be21926a9, type: 3}
+  - _spawnPoint: {fileID: 8599264261242852718, guid: 4abd903d8312f5949a69a75de4eaf0ce, type: 3}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

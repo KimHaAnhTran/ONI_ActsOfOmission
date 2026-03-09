@@ -7,33 +7,49 @@ public class TextType : MonoBehaviour
 {
     private TextMeshProUGUI _textMesh;
     private bool _canType;
-    
-    void Start()
+
+    void Awake()
     {
-        // Get the component at the start
         _textMesh = GetComponent<TextMeshProUGUI>();
+    }
+
+    private void OnEnable()
+    {
+        // Subscribe to the event for better performance
+        TypewriterKey.OnCanTypeChanged += HandleCanTypeChanged;
+        _canType = TypewriterKey.CanType;
+    }
+
+    private void OnDisable()
+    {
+        TypewriterKey.OnCanTypeChanged -= HandleCanTypeChanged;
+    }
+
+    private void HandleCanTypeChanged(bool canType)
+    {
+        _canType = canType;
     }
 
     void Update()
     {
-        _canType = TypewriterKey.CanType;
-
         if (!_canType) return;
+
         // inputString captures everything typed this frame
         foreach (char c in Input.inputString)
         {
-            if (c == '\b') // If backspace is pressed
+            if (c == '\b') // Backspace
             {
                 if (_textMesh.text.Length > 0)
                 {
                     _textMesh.text = _textMesh.text.Substring(0, _textMesh.text.Length - 1);
                 }
             }
-            else if ((c == '\n') || (c == '\r')) // If enter/return is pressed
+            else if (c == '\n' || c == '\r' || c == ' ') // Enter / Return
             {
-                _textMesh.text += "\n";
+                // RESET the text field
+                _textMesh.text = "";
             }
-            else // Any other character typed
+            else // Any other character
             {
                 _textMesh.text += c;
             }
