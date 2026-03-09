@@ -39,9 +39,12 @@ public class DragDrop : MonoBehaviour
         _isDragging = false; // Stop dragging on release
     }
 
-    public void StartManualDrag(Vector2 mousePos) {
-        _dragOffset = mousePos - (Vector2)transform.position;
+    public void StartManualDrag(Vector2 mousePos)
+    {
         _isDragging = true;
+        // Recalculate mouse world position to be absolutely sure the offset is fresh
+        Vector2 currentWorldMouse = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        _dragOffset = currentWorldMouse - (Vector2)transform.position;
     }
 
     private void UpdateObjectPosition()
