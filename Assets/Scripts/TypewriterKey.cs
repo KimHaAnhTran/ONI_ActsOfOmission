@@ -3,6 +3,7 @@ using System;
 
 public class TypewriterKey : MonoBehaviour
 {
+    //Delegate, event system
     public static event Action<bool> OnCanTypeChanged;
 
     [SerializeField] private KeyCode _keyInput = KeyCode.None;
@@ -48,7 +49,7 @@ public class TypewriterKey : MonoBehaviour
     {
         if (_spriteRenderer == null) return;
 
-        _spriteColor.a = canTypeState ? (byte)255 : (byte)50;
+        _spriteColor.a = canTypeState ? (byte)255 : (byte)150;
         _spriteRenderer.color = _spriteColor;
     }
 

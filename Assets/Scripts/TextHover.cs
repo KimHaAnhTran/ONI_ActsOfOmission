@@ -8,6 +8,7 @@ public class TextHover : MonoBehaviour
 {
     [SerializeField] private GameObject _highlights;
     private  bool _isHover = false;
+    private bool _isPressed = false;
 
     public  bool IsHover {
         get { return _isHover; }
@@ -23,12 +24,15 @@ public class TextHover : MonoBehaviour
     {
         _highlights.SetActive(true);
         _isHover = true;
+        _isPressed = TypewriterKey.CanType;
     }
 
     public void OnMouseExit()
     {
+        if (_isPressed) return;
         _highlights.SetActive(false);
         _isHover = false;
     }
 
 }
+
