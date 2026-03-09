@@ -127,12 +127,14 @@ public class TextType : MonoBehaviour
         }
     }
 
+    // For when player types wrong, text will shake
     private void TriggerShake()
     {
         if (_shakeCoroutine != null) StopCoroutine(_shakeCoroutine);
         _shakeCoroutine = StartCoroutine(ShakeRoutine());
     }
 
+    // Using coroutine for durations
     private IEnumerator ShakeRoutine()
     {
         float elapsed = 0f;

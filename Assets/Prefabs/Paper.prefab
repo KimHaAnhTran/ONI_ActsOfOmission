@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 7487614141586341852}
   - component: {fileID: 8796386788912518978}
   - component: {fileID: 6073175570751759204}
+  - component: {fileID: 3006526796761989376}
   m_Layer: 0
   m_Name: Paper
   m_TagString: Untagged
@@ -102,3 +103,19 @@ MonoBehaviour:
   _bounceAmplitude: 0.02
   _bounceFrequency: 4
   _bounceDuration: 0.8
+--- !u!114 &3006526796761989376
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1737492353534611442}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0ed8136fd9859054d8dbade6549b6d1f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _exitSpeed: 1
+  _fadeDuration: 0.5
+  _moveDirection: {x: 0, y: 1, z: 0}
+  _finishedPaperPrefab: {fileID: 3072707447760680281, guid: 17e369b7f225c234baa5d63fcbfe7035, type: 3}
