@@ -8,6 +8,7 @@ public class TypewriterKey : MonoBehaviour
 
     // Important Action, to be accessed from TextType.cs, ClickToTranscribe.cs, TypewriterHandMovement.cs
     // Only TypewriterKey can invoke Action
+    // Action<bool> denotes methods accept bool parameter, but still returns void
     public static event Action<bool> OnCanTypeChanged;
 
     // Input Key Code, unique to each initialized key object
