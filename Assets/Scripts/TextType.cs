@@ -109,12 +109,7 @@ public class TextType : MonoBehaviour
 
     private void ValidateInput()
     {
-        bool wasMistake = _hasMistake;
         _hasMistake = !TargetWord.StartsWith(_currentInput);
-
-        // Notify the Typewriter Hand to jam or unjam
-        if (wasMistake != _hasMistake)
-            TypewriterKey.SetMistakeState(_hasMistake);
     }
 
     private void UpdateVisuals()
@@ -155,7 +150,6 @@ public class TextType : MonoBehaviour
     private void FinishDocument()
     {
         TypewriterKey.CanType = false;
-        TypewriterKey.SetMistakeState(false); // Unjam hand for next paper
         OnCurrentDocumentFinished?.Invoke(); // Lock the highlight
         _wordIndex = 0;
     }

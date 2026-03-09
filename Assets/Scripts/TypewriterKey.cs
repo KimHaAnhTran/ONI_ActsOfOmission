@@ -4,7 +4,6 @@ using System;
 public class TypewriterKey : MonoBehaviour
 {
     public static event Action<bool> OnCanTypeChanged;
-    public static event Action<bool> OnMistakeChanged; // Added for hand jamming
 
     [SerializeField] private KeyCode _keyInput = KeyCode.None;
     private Vector3 _ogPos, _shiftPos;
@@ -23,10 +22,6 @@ public class TypewriterKey : MonoBehaviour
         }
     }
 
-    public static void SetMistakeState(bool isWrong)
-    {
-        OnMistakeChanged?.Invoke(isWrong);
-    }
 
     private void Awake()
     {
