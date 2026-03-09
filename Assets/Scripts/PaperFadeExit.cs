@@ -9,7 +9,8 @@ public class PaperFadeExit : MonoBehaviour
     [SerializeField] private Vector3 _moveDirection = Vector3.up;
 
     [Header("Replacement")]
-    [SerializeField] private GameObject _finishedPaperPrefab;
+    [SerializeField] private GameObject _parcelSmallPrefab;
+    [SerializeField] private GameObject _parcelPrefab;
 
     private SpriteRenderer _spriteRenderer;
     private bool _isExiting = false;
@@ -43,10 +44,21 @@ public class PaperFadeExit : MonoBehaviour
         _isExiting = true;
 
         // 1. Spawn the replacement object at the current position
-        if (_finishedPaperPrefab != null)
+        if (_parcelSmallPrefab != null && _parcelPrefab != null)
         {
+            Vector3 newPosSmall = transform.position + new Vector3(0f, 0.5f, 0f);
+            Vector3 newPos = transform.position + new Vector3(0f, 2f, 0f);
             // We instantiate it inside the Right Desk parent, not inside the typewriter
-            Instantiate(_finishedPaperPrefab, transform.position, transform.rotation, transform.parent.transform.parent);
+            GameObject parent = GameObject.Find("LeftDesk");
+
+            GameObject smallParcel = Instantiate(_parcelSmallPrefab, newPosSmall, transform.rotation, transform.parent.transform.parent);
+            smallParcel.name = "Parcel_S";
+
+            GameObject bigParcel = Instantiate(_parcelPrefab, newPos, transform.rotation, parent.transform);
+            bigParcel.name = "Parcel";
+
+            smallParcel.GetComponent<SwitchDocBetweenScreens>().SetPairDoc(bigParcel);
+            bigParcel.GetComponent<SwitchDocBetweenScreens>().SetPairDoc(smallParcel);
         }
 
         float elapsed = 0f;

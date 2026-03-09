@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class SwtichDocBetweenScreens : MonoBehaviour
+public class SwitchDocBetweenScreens : MonoBehaviour
 {
     [SerializeField] private GameObject _pairDoc;
     [SerializeField] private bool _isSmallDoc;
@@ -14,6 +14,10 @@ public class SwtichDocBetweenScreens : MonoBehaviour
         // Cache components once to avoid calling GetComponent every frame
         _dragDrop = GetComponent<DragDrop>();
         if (_pairDoc != null) _pairDragDrop = _pairDoc.GetComponent<DragDrop>();
+    }
+
+    public void SetPairDoc(GameObject pairDoc) {
+        _pairDoc = pairDoc;
     }
 
     private void Update()
@@ -41,6 +45,9 @@ public class SwtichDocBetweenScreens : MonoBehaviour
 
         // Hand over the drag to the pair
         _pairDoc.transform.position = new Vector3(mousePos.x, mousePos.y, _pairDoc.transform.position.z);
-        if (_pairDragDrop != null) _pairDragDrop.IsDragging = true;
+
+        if (_pairDragDrop == null) _pairDragDrop = _pairDoc.GetComponent<DragDrop>();
+
+        if (_pairDragDrop != null) _pairDragDrop.StartManualDrag(mousePos);
     }
 }

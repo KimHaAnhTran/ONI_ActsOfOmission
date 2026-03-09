@@ -39,6 +39,11 @@ public class DragDrop : MonoBehaviour
         _isDragging = false; // Stop dragging on release
     }
 
+    public void StartManualDrag(Vector2 mousePos) {
+        _dragOffset = mousePos - (Vector2)transform.position;
+        _isDragging = true;
+    }
+
     private void UpdateObjectPosition()
     {
         if (!_isDragging) return;

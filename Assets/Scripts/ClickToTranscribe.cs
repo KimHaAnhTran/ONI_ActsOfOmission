@@ -21,6 +21,12 @@ public class ClickToTranscribe : MonoBehaviour
             if (_hoverScript != null)
             {
                 _hoverScript.LockHighlight();
+
+                BoxCollider2D[] boxCollider2Ds = GetComponentsInChildren<BoxCollider2D>();
+
+                foreach (BoxCollider2D collider in boxCollider2Ds) {
+                    collider.enabled = false; // Player no longer click on box collider
+                }
             }
         }
     }

@@ -30,7 +30,7 @@ public class PaperBounceEntry : MonoBehaviour
         float currentY = transform.localPosition.y;
         float newY = Mathf.SmoothDamp(currentY, _targetLocal.position.y, ref _yVelocity, _smoothTime);
 
-        // 2. Add the mathematical bounce
+        // 2. Mathematical bounce
         float elapsed = Time.time - _startTime;
 
         if (elapsed < _bounceDuration)
