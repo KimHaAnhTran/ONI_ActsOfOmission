@@ -1,4 +1,10 @@
 # O.N.I. Acts of Omission
+<p align="center">
+    <a href="https://ducktran.itch.io/oni-acts-of-omission">
+        <img src="https://img.itch.zone/aW1nLzI2MDMxMzM3LnBuZw==/315x250%23c/9MNish.png" />
+    </a>
+</p>
+<h1 align = "center"> <a href = "https://ducktran.itch.io/oni-acts-of-omission"> MAIN PAGE </a> </h1>
 
 ---
 # About
