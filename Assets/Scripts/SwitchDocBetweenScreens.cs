@@ -13,9 +13,7 @@ public class SwitchDocBetweenScreens : MonoBehaviour
     {
         // Cache components once to avoid calling GetComponent every frame
         _dragDrop = GetComponent<DragDrop>();
-        if (_pairDoc != null) _pairDragDrop = _pairDoc.GetComponent<DragDrop>();
     }
-
 
     private void Update()
     {
