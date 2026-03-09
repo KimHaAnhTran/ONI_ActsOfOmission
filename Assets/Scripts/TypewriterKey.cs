@@ -1,6 +1,8 @@
 using UnityEngine;
 using System;
 
+// Script for keys on typewriter GameObjects 
+// Each key (26 total) is instantiated from this class 
 public class TypewriterKey : MonoBehaviour
 {
 
