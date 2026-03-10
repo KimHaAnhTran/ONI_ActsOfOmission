@@ -108,4 +108,21 @@ public class SortDocuments : MonoBehaviour
         Vector3 offset = new Vector3(-.1f, -.1f, .05f);
         _shadow.transform.position = transform.position + offset;
     }
+
+    private void OnDestroy()
+    {
+        // Check if the list contains this object before removing to avoid errors
+        if (_documents.Contains(this.gameObject))
+        {
+            Debug.Log(this.gameObject.name);
+            _documents.Remove(this.gameObject);
+        }
+
+        // Also clean up the shadow if the parcel is destroyed mid-drag
+        if (_shadow != null)
+        {
+            Destroy(_shadow);
+        }
+
+    }
 }

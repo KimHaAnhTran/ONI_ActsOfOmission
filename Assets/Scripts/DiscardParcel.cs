@@ -11,6 +11,9 @@ public class DiscardParcel : MonoBehaviour
     [Header("Animation Settings")]
     [SerializeField] private float _smoothTime = 0.15f;
 
+    [Header("History Warning")]
+    [SerializeField] private GameObject _textMeshPro;
+
     private float _currentTargetY;
     private float _currentVelocity;
     private bool _isActive = false;
@@ -68,8 +71,10 @@ public class DiscardParcel : MonoBehaviour
         {
             if (_isMouseOver)
                 _currentTargetY = _yVisible.position.y + _hoverOffset;
+
             else
                 _currentTargetY = _yVisible.position.y;
+            _textMeshPro.SetActive(_isMouseOver);
         }
         else if (dd != null && !dd.IsDragging && _isMouseOver)
         {

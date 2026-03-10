@@ -5,6 +5,10 @@ public class SwitchDocBetweenScreens : MonoBehaviour
     [SerializeField] private GameObject _pairDoc;
     [SerializeField] private bool _isSmallDoc;
 
+    public GameObject PairDoc {
+        get { return _pairDoc; }
+    }
+
     private DragDrop _dragDrop;
     private DragDrop _pairDragDrop;
     private float _switchPoint = 0.5895f;

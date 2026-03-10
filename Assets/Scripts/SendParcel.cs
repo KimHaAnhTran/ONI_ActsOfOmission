@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections;
 using System;
+using TMPro;
 
 public class SendParcel : MonoBehaviour
 {
@@ -14,6 +15,9 @@ public class SendParcel : MonoBehaviour
     [Header("Animation Settings")]
     [SerializeField] private float _smoothTime = 0.15f;
 
+    [Header("History Warning")]
+    [SerializeField] private GameObject _textMeshPro;
+
     private float _currentTargetY;
     private float _currentVelocity;
     private bool _isActive = false;
@@ -23,6 +27,8 @@ public class SendParcel : MonoBehaviour
     {
         transform.localPosition = new Vector3(transform.localPosition.x, _yHidden.position.y, transform.localPosition.z);
         _currentTargetY = _yHidden.position.y;
+        _textMeshPro.GetComponent<TextMeshProUGUI>().text = "Your actions will affect history\r\nAre you <color=#FFD402>SURE</color>?";
+        _textMeshPro.SetActive(false);
     }
 
     private void OnEnable()
@@ -47,6 +53,7 @@ public class SendParcel : MonoBehaviour
     {
         _isActive = false;
         _currentTargetY = _yHidden.position.y;
+        _textMeshPro.SetActive(false);
     }
 
     // Unity built-in mouse tracking
@@ -76,6 +83,7 @@ public class SendParcel : MonoBehaviour
                 _currentTargetY = _yVisible.position.y + _hoverOffset;
             else
                 _currentTargetY = _yVisible.position.y;
+            _textMeshPro.SetActive(_isMouseOver);
         }
         else if (dd != null && !dd.IsDragging && _isMouseOver)
         {
