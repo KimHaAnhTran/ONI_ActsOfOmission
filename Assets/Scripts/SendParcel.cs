@@ -17,7 +17,7 @@ public class SendParcel : MonoBehaviour
     private float _currentTargetY;
     private float _currentVelocity;
     private bool _isActive = false;
-    private bool _isMouseOver = false; // NEW: Tracks mouse cursor
+    private bool _isMouseOver = false; // Tracks mouse cursor
 
     private void Awake()
     {

@@ -14,7 +14,7 @@ public class DiscardParcel : MonoBehaviour
     private float _currentTargetY;
     private float _currentVelocity;
     private bool _isActive = false;
-    private bool _isMouseOver = false;
+    private bool _isMouseOver = false; // Tracks mouse cursor
 
     private void Awake()
     {
