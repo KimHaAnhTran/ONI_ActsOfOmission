@@ -187,11 +187,10 @@ public class TextType : MonoBehaviour
         }
         else
         {
-            // Example: Target "Climb", Input "Clam"
+            // Example: Target "Climb", Input "Cla"
             // correctPart = "Cla" (actually "Cl" is correct, but the logic 
             // follows the input length minus the mistake)
 
-            // Let's refine this to show exactly where it broke:
             string correctPart = _currentInput.Substring(0, _currentInput.Length - 1);
             char wrongChar = _currentInput[_currentInput.Length - 1];
 
