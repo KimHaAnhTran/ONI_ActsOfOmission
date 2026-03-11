@@ -4174,6 +4174,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _shakeDuration: 0.15
   _shakeAmount: 0.03
+  _errorColor: '#FFD402'
+  _ghostColor: '#666666'
+  _startDelay: 1.25
 --- !u!114 &1202602750
 MonoBehaviour:
   m_ObjectHideFlags: 0

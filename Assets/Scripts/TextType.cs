@@ -28,6 +28,15 @@ public class TextType : MonoBehaviour
     private string _currentInput = ""; 
     private bool _hasMistake = false;
 
+    
+    [Header("Color Settings")]
+    [SerializeField] private string _errorColor = "#FFD402"; // Yellow
+    [SerializeField] private string _ghostColor = "#666666"; // Gray
+
+
+    private Coroutine _visualsCoroutine;
+    [SerializeField] private float _startDelay = 1f;
+
     // This data type is Expression Bodied Property in C#, read-only
     // If everything goes right (list not empty, wordIndex within bounds), return word player needs to type
     private string TargetWord => (_allWords != null && _wordIndex < _allWords.Length) ? _allWords[_wordIndex] : "";
@@ -67,16 +76,38 @@ public class TextType : MonoBehaviour
 
     // Method subscribed to OnCanTypeChanged Action
     // TypewriterKey.cs invokes only, this class can not
+    // Add this to your Private Fields
     private void HandleCanTypeChanged(bool canType)
     {
         _canType = canType;
-        if (!canType) _textMesh.text = ""; // If CanType is false, no text appears
+
+        // Stop any existing routine to prevent overlap
+        if (_visualsCoroutine != null) StopCoroutine(_visualsCoroutine);
+
+        if (canType)
+        {
+            // Start the delayed reveal
+            _visualsCoroutine = StartCoroutine(DelayedStartRoutine());
+        }
+        else
+        {
+            _textMesh.text = ""; // Clear immediately if disabled
+        }
+    }
+
+    private IEnumerator DelayedStartRoutine()
+    {
+        _textMesh.text = ""; // Ensure it's empty during the wait
+        yield return new WaitForSeconds(_startDelay);
+        UpdateVisuals();
+        _visualsCoroutine = null;
     }
 
     void Update()
     {
-        // If CanType (from TypewriterKey.cs) is false, player can not type and engage word check
-        if (!_canType || _allWords == null) return;
+        // Don't process typing or visuals if we can't type 
+        // OR if we are still in the initial delay period
+        if (!_canType || _allWords == null || _visualsCoroutine != null) return;
 
         // Check each character in inputted string
         // Input.inputString captures every key pressed since last frame
@@ -138,21 +169,46 @@ public class TextType : MonoBehaviour
         _hasMistake = !TargetWord.StartsWith(_currentInput);
     }
 
-    // 
     private void UpdateVisuals()
     {
         if (_allWords == null || _wordIndex >= _allWords.Length) return;
 
+        string target = TargetWord;
+        string formattedText = "";
+
         if (!_hasMistake)
         {
-            _textMesh.text = _currentInput;
+            // 1. Everything typed so far is correct (White)
+            // 2. The rest of the target word is ghost text (Gray)
+            string typed = _currentInput;
+            string untyped = target.Substring(typed.Length);
+
+            formattedText = $"{typed}<color={_ghostColor}>{untyped}</color>";
         }
         else
         {
+            // Example: Target "Climb", Input "Clam"
+            // correctPart = "Cla" (actually "Cl" is correct, but the logic 
+            // follows the input length minus the mistake)
+
+            // Let's refine this to show exactly where it broke:
             string correctPart = _currentInput.Substring(0, _currentInput.Length - 1);
             char wrongChar = _currentInput[_currentInput.Length - 1];
-            _textMesh.text = $"{correctPart}<color=#FFD402>{wrongChar}</color>";
+
+            // Calculate how much of the original word is left AFTER the mistake
+            // If target is "Climb" (5) and we typed "Cla" (3), we skip "i" and show "mb"
+            int remainingStart = _currentInput.Length;
+            string remainingGhost = "";
+
+            if (remainingStart < target.Length)
+            {
+                remainingGhost = target.Substring(remainingStart);
+            }
+
+            formattedText = $"{correctPart}<color={_errorColor}>{wrongChar}</color><color={_ghostColor}>{remainingGhost}</color>";
         }
+
+        _textMesh.text = formattedText;
     }
 
     private void TriggerShake()
@@ -180,7 +236,8 @@ public class TextType : MonoBehaviour
     private void FinishDocument()
     {
         TypewriterKey.CanType = false;
-        OnCurrentDocumentFinished?.Invoke(); // Lock the highlight
+        _textMesh.text = ""; // Clear the ghost text
+        OnCurrentDocumentFinished?.Invoke();
         _wordIndex = 0;
     }
 }
