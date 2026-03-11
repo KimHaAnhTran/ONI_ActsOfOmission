@@ -218,7 +218,7 @@ public class TextType : MonoBehaviour
         _shakeCoroutine = StartCoroutine(ShakeRoutine()); // Restart Coroutine
     }
 
-    // Shake logic
+    // Shake logic for when player enters wrong char
     private IEnumerator ShakeRoutine()
     {
         float elapsed = 0f;
