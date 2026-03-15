@@ -48,11 +48,6 @@ public class TextType : MonoBehaviour
         _originalLocalPos = transform.localPosition;
     }
 
-    private void Start()
-    {
-        UpdateDocumentContent();
-    }
-
     // Separate this so it can be called whenever a new document arrives
     public void UpdateDocumentContent()
     {
@@ -100,6 +95,9 @@ public class TextType : MonoBehaviour
 
         if (canType)
         {
+            // Update the next word target
+            UpdateDocumentContent();
+
             // Start the delayed reveal
             _visualsCoroutine = StartCoroutine(DelayedStartRoutine());
         }

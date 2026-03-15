@@ -136,7 +136,6 @@ public class SortDocuments : MonoBehaviour
         // Check if the list contains this object before removing to avoid errors
         if (_documents.Contains(this.gameObject))
         {
-            Debug.Log(this.gameObject.name);
             _documents.Remove(this.gameObject);
         }
 

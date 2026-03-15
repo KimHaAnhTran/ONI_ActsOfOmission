@@ -22,6 +22,8 @@ public static class MainDataset
     {
         if (DocumentGroups.Count == 0) return "No Data Loaded";
 
+
+        Debug.Log("Bypassed first if-else GetNextDocumentContent");
         // Check if current group index is valid
         if (_globalGroupIndex < DocumentGroups.Count)
         {
@@ -37,6 +39,8 @@ public static class MainDataset
                 _globalDocIndex = 0;
                 _globalGroupIndex++;
             }
+
+            Debug.Log($"Current Doc[{_globalGroupIndex}][{_globalDocIndex}]");
 
             return content;
         }

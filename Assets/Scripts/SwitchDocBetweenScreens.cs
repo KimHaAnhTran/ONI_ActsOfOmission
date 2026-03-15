@@ -64,7 +64,7 @@ public class SwitchDocBetweenScreens : MonoBehaviour
         if (_pairDragDrop != null)
         {
             _pairDragDrop.StartManualDrag(mousePos);
-            Debug.Log($"Switched drag to: {_pairDoc.name}");
+            //Debug.Log($"Switched drag to: {_pairDoc.name}");
         }
     }
 }

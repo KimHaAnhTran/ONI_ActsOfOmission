@@ -12,7 +12,6 @@ public class ClickToTranscribe : MonoBehaviour
 
     private void OnMouseDown()
     {
-        Debug.Log("Is already transcribed: " + _alreadyTranscribed);
 
         if (!_alreadyTranscribed)
         {
