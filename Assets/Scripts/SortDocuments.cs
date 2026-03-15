@@ -10,6 +10,7 @@ public class SortDocuments : MonoBehaviour
 {
     private static List<GameObject> _documents = new List<GameObject>();
     private GameObject _shadow;
+    private const float CHILD_Z_OFFSET = -0.001f;
 
     private void Start()
     {
@@ -34,7 +35,7 @@ public class SortDocuments : MonoBehaviour
         CreateShadowClone();
         _documents.Add(this._shadow); // Add shadow just below host
         _documents.Add(this.gameObject); // Add host to the very top
-        updateHierarchy();
+        UpdateHierarchy();
     }
 
     private void OnMouseDrag()
@@ -57,16 +58,37 @@ public class SortDocuments : MonoBehaviour
 
     }
 
-    private void updateHierarchy()
+    private void UpdateHierarchy()
     {
         float zIndex = 0f;
 
-        // Apply new Z-depths based on list order
-        foreach (GameObject child in _documents)
+        // 1. Sort the main documents (the "Rows")
+        foreach (GameObject doc in _documents)
         {
+            if (doc == null) continue;
+
             zIndex -= 0.1f;
-            Transform childPos = child.transform;
-            childPos.localPosition = new Vector3(childPos.localPosition.x, childPos.localPosition.y, zIndex);
+            doc.transform.localPosition = new Vector3(doc.transform.localPosition.x, doc.transform.localPosition.y, zIndex);
+
+            // 2. Sort all nested children for this specific document
+            UpdateNestedChildrenZ(doc.transform, zIndex);
+        }
+    }
+
+    private void UpdateNestedChildrenZ(Transform parent, float parentZ)
+    {
+        foreach (Transform child in parent)
+        {
+            // We want the child to be slightly "more negative" (closer to camera) than its parent
+            float childZ = CHILD_Z_OFFSET;
+
+            child.localPosition = new Vector3(child.localPosition.x, child.localPosition.y, childZ);
+
+            // 3. Recurse! If this child has its own children (like a signature on a stamp)
+            if (child.childCount > 0)
+            {
+                UpdateNestedChildrenZ(child, childZ);
+            }
         }
     }
 

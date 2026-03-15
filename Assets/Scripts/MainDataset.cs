@@ -7,39 +7,62 @@ public static class MainDataset
     // Static list so it's accessible from anywhere via MainDataset.DocumentGroups
     public static List<List<string>> DocumentGroups { get; private set; } = new List<List<string>>();
 
-    // This attribute tells Unity to run this method automatically as soon as the game boots up
+    // Two indices to traverse the "Table" (Rows and Columns)
+    private static int _globalGroupIndex = 0; // The Row (Batch)
+    private static int _globalDocIndex = 0;   // The Column (Document within Batch)
+
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
     private static void Initialize()
     {
         LoadData();
     }
 
+    // Fetches the next document string, traversing columns first, then moving to the next row
+    public static string GetNextDocumentContent()
+    {
+        if (DocumentGroups.Count == 0) return "No Data Loaded";
+
+        // Check if current group index is valid
+        if (_globalGroupIndex < DocumentGroups.Count)
+        {
+            // Get the specific document in the current batch
+            string content = DocumentGroups[_globalGroupIndex][_globalDocIndex];
+
+            // Increment the Column (Document)
+            _globalDocIndex++;
+
+            // If we've reached the end of the current Row (Batch), move to the next Row
+            if (_globalDocIndex >= DocumentGroups[_globalGroupIndex].Count)
+            {
+                _globalDocIndex = 0;
+                _globalGroupIndex++;
+            }
+
+            return content;
+        }
+
+        return "End of Records";
+    }
+
     private static void LoadData()
     {
-        // Load from Resources folder Documents.txt
         TextAsset textFile = Resources.Load<TextAsset>("Documents");
-        
+
         if (textFile == null)
         {
             Debug.LogError("MainDataset: Documents.txt not found in Resources!");
             return;
         }
 
-        // Clear DocumentGroups for new adding
         DocumentGroups.Clear();
 
-        // Standard recognition of New Line
         string[] allLines = textFile.text.Split(new[] { "\r\n", "\r", "\n" }, System.StringSplitOptions.None);
-
-        // Create temporrary List<string> to add onto DocumentGroups
         List<string> currentGroup = new List<string>();
 
         foreach (string line in allLines)
         {
-            // Removes dead white space and takes one line
             string trimmedLine = line.Trim();
 
-            // New document group whenever "//"
             if (trimmedLine == "//")
             {
                 if (currentGroup.Count > 0)
@@ -48,25 +71,22 @@ public static class MainDataset
                     currentGroup.Clear();
                 }
             }
-            // Otherwise, add document to current group
             else if (!string.IsNullOrWhiteSpace(trimmedLine))
             {
                 currentGroup.Add(trimmedLine);
             }
         }
 
-        // Because there's no "//" at the end of Documents.txt
-        // This acts as safety net, adds final group to DocumentGroups
         if (currentGroup.Count > 0)
         {
             DocumentGroups.Add(currentGroup);
         }
-        
+
         Debug.Log($"<color=cyan>MainDataset Loaded:</color> {DocumentGroups.Count} groups ready.");
 
         // --- DEBUG PRINT START ---
-        
-        /*Debug.Log("<color=cyan><b>MainDataset: Starting Data Dump...</b></color>");
+        /*
+        Debug.Log("<color=cyan><b>MainDataset: Starting Data Dump...</b></color>");
 
         for (int i = 0; i < DocumentGroups.Count; i++)
         {
@@ -78,7 +98,15 @@ public static class MainDataset
             }
         }
 
-        Debug.Log("<color=cyan><b>MainDataset: Load Complete.</b></color>");*/
+        Debug.Log("<color=cyan><b>MainDataset: Load Complete.</b></color>");
+        */
         // --- DEBUG PRINT END ---
+    }
+
+    // Helper to reset if you restart the level
+    public static void ResetIndices()
+    {
+        _globalGroupIndex = 0;
+        _globalDocIndex = 0;
     }
 }

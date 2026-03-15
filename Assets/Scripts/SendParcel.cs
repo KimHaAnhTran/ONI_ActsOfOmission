@@ -97,18 +97,42 @@ public class SendParcel : MonoBehaviour
         // Fire global signal so BOTH buttons hide immediately
         OnParcelProcessed?.Invoke();
 
+        // Find all active documents to drag them away too
+        GameObject[] documents = GameObject.FindGameObjectsWithTag("Document");
+
         float duration = 0.5f;
         float elapsed = 0f;
-        Vector3 startPos = parcel.transform.position;
-        Vector3 endPos = startPos + Vector3.up * 4f;
+
+        // Store starting positions for the parcel and all found documents
+        Vector3 parcelStart = parcel.transform.position;
+        Vector3[] docStarts = new Vector3[documents.Length];
+        for (int i = 0; i < documents.Length; i++) docStarts[i] = documents[i].transform.position;
+
+        Vector3 moveOffset = Vector3.up * 4f;
 
         while (elapsed < duration)
         {
             elapsed += Time.deltaTime;
-            parcel.transform.position = Vector3.Lerp(startPos, endPos, elapsed / duration);
+            float t = elapsed / duration;
+
+            // Move Parcel
+            parcel.transform.position = Vector3.Lerp(parcelStart, parcelStart + moveOffset, t);
+
+            // Move all Documents
+            for (int i = 0; i < documents.Length; i++)
+            {
+                if (documents[i] != null)
+                    documents[i].transform.position = Vector3.Lerp(docStarts[i], docStarts[i] + moveOffset, t);
+            }
+
             yield return null;
         }
 
+        // Cleanup
         Destroy(parcel);
+        foreach (GameObject doc in documents) Destroy(doc);
+
+        // Trigger next batch
+        GenerateDocument.OnSpawnNextBatch?.Invoke();
     }
 }

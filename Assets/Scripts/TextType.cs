@@ -50,13 +50,27 @@ public class TextType : MonoBehaviour
 
     private void Start()
     {
-        // For testing: grabs Group 0, Doc 0
-        if (MainDataset.DocumentGroups.Count > 0)
+        UpdateDocumentContent();
+    }
+
+    // Separate this so it can be called whenever a new document arrives
+    public void UpdateDocumentContent()
+    {
+        string content = MainDataset.GetNextDocumentContent();
+
+        if (content != "End of Records")
         {
-            // DocumentGroups[][] is a string
-            // Split string via ' '
-            _allWords = MainDataset.DocumentGroups[0][0].Split(' ');
-            UpdateVisuals();
+            _allWords = content.Split(' ');
+            _wordIndex = 0;
+            _currentInput = "";
+            _hasMistake = false;
+
+            if (_visualsCoroutine != null) StopCoroutine(_visualsCoroutine);
+            _visualsCoroutine = StartCoroutine(DelayedStartRoutine());
+        }
+        else
+        {
+            _textMesh.text = "NO MORE DOCUMENTS";
         }
     }
 

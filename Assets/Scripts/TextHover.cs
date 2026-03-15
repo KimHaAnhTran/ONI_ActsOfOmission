@@ -37,6 +37,7 @@ public class TextHover : MonoBehaviour
 
     public void OnMouseEnter()
     {
+        Debug.Log("Is Locked?" + _isLocked);
         if (_isLocked) return;
 
         _highlights.SetActive(true);

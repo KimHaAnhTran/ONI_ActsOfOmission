@@ -86,18 +86,37 @@ public class DiscardParcel : MonoBehaviour
     {
         SendParcel.OnParcelProcessed?.Invoke();
 
+        GameObject[] documents = GameObject.FindGameObjectsWithTag("Document");
+
         float duration = 0.5f;
         float elapsed = 0f;
-        Vector3 startPos = parcel.transform.position;
-        Vector3 endPos = startPos + Vector3.down * 4f;
+
+        Vector3 parcelStart = parcel.transform.position;
+        Vector3[] docStarts = new Vector3[documents.Length];
+        for (int i = 0; i < documents.Length; i++) docStarts[i] = documents[i].transform.position;
+
+        Vector3 moveOffset = Vector3.down * 4f;
 
         while (elapsed < duration)
         {
             elapsed += Time.deltaTime;
-            parcel.transform.position = Vector3.Lerp(startPos, endPos, elapsed / duration);
+            float t = elapsed / duration;
+
+            parcel.transform.position = Vector3.Lerp(parcelStart, parcelStart + moveOffset, t);
+
+            for (int i = 0; i < documents.Length; i++)
+            {
+                if (documents[i] != null)
+                    documents[i].transform.position = Vector3.Lerp(docStarts[i], docStarts[i] + moveOffset, t);
+            }
+
             yield return null;
         }
 
         Destroy(parcel);
+        foreach (GameObject doc in documents) Destroy(doc);
+
+        // Trigger next batch
+        GenerateDocument.OnSpawnNextBatch?.Invoke();
     }
 }
