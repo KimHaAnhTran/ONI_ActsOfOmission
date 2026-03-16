@@ -979,10 +979,12 @@ MonoBehaviour:
   - {fileID: 5191003319620316725, guid: 89f488feec25643499438a870115f545, type: 3}
   - {fileID: 7480542170841162133, guid: 8d2d99235ab14ea44bb31b753968ce55, type: 3}
   - {fileID: 3535102108713425973, guid: 27a06a1a1e0e4034c95c9076a17d2e8b, type: 3}
+  - {fileID: 1976309365909838230, guid: 0c4b1f97718704440bc70ad0b9932c3e, type: 3}
   _rightDocuments:
   - {fileID: 4244919242444420939, guid: 17e369b7f225c234baa5d63fcbfe7035, type: 3}
   - {fileID: 6247458362608682804, guid: 773681a29d87f2047a5de36b779d4d10, type: 3}
   - {fileID: 3675014060629445680, guid: 83384ae727c3a504db769cc34353e768, type: 3}
+  - {fileID: 4864216477098464701, guid: cbc4545e3d0d4a34f892158513118019, type: 3}
   _leftSpawnPoint: {fileID: 750539417}
   _rightSpawnPoint: {fileID: 243789834}
   _leftParent: {fileID: 316822572}

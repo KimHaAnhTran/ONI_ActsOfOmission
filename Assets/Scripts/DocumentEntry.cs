@@ -4,8 +4,8 @@ using System.Collections;
 public class DocumentEntry : MonoBehaviour
 {
     [Header("Animation Settings")]
-    [SerializeField] private float _dropDistance = 0.3f;
-    [SerializeField] private float _duration = 0.6f;
+    [SerializeField] private float _dropDistance = 1.5f;
+    [SerializeField] private float _duration = 1f;
     [SerializeField] private AnimationCurve _dropCurve = AnimationCurve.EaseInOut(0, 0, 1, 1);
 
     private Coroutine _entryCoroutine;
