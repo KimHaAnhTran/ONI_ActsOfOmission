@@ -128,7 +128,7 @@ public class SortDocuments : MonoBehaviour
     {
         // Maintain relative offset and a slight Z-buffer while dragging
         Vector3 offset = new Vector3(-.1f, -.1f, .05f);
-        _shadow.transform.position = transform.position + offset;
+        if(_shadow != null) _shadow.transform.position = transform.position + offset;
     }
 
     private void OnDestroy()
@@ -145,5 +145,16 @@ public class SortDocuments : MonoBehaviour
             Destroy(_shadow);
         }
 
+    }
+
+    //Called in SwitchDocBetweenScreens.cs
+    public void ForceToTop()
+    {
+        if (_documents.Contains(this.gameObject))
+        {
+            _documents.Remove(this.gameObject);
+        }
+        _documents.Add(this.gameObject);
+        UpdateHierarchy();
     }
 }

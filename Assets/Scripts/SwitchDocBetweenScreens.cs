@@ -51,20 +51,30 @@ public class SwitchDocBetweenScreens : MonoBehaviour
         // 1. Stop dragging this one
         _dragDrop.IsDragging = false;
 
-        // 2. Teleport this one away (Out of threshold range)
+        // NEW: If the small doc has a shadow, clear it before switching
+        SortDocuments smallSorter = GetComponent<SortDocuments>();
+        if (smallSorter != null) smallSorter.ClearShadow();
+
+        // 2. Teleport this one away
         transform.position += new Vector3(50f, 0, 0);
 
         // 3. Move the pair to exactly where the mouse is
         _pairDoc.transform.position = new Vector3(mousePos.x, mousePos.y, _pairDoc.transform.position.z);
 
         // 4. Force the pair to start dragging
-        // We re-fetch if null just to be 100% safe
         if (_pairDragDrop == null) _pairDragDrop = _pairDoc.GetComponent<DragDrop>();
 
         if (_pairDragDrop != null)
         {
             _pairDragDrop.StartManualDrag(mousePos);
-            //Debug.Log($"Switched drag to: {_pairDoc.name}");
+
+            // Use a "Silent" sort that doesn't create shadows
+            SortDocuments bigSorter = _pairDoc.GetComponent<SortDocuments>();
+            if (bigSorter != null)
+            {
+                // We call a new public method we'll add to SortDocuments
+                bigSorter.ForceToTop();
+            }
         }
     }
 }

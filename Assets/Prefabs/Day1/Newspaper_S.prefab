@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 1079819296279672759}
   - component: {fileID: 4782237955898798897}
   m_Layer: 0
-  m_Name: NewYorkTimes_S
+  m_Name: Newspaper_S
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
