@@ -29,6 +29,10 @@ public class GenerateDocument : MonoBehaviour
 
     private void Start()
     {
+        // Sync the dataset index with the current scene name
+        MainDataset.CheckDay();
+
+        // Then proceed with your normal spawning logic
         SpawnBatch();
     }
 
@@ -43,9 +47,19 @@ public class GenerateDocument : MonoBehaviour
 
     public void SpawnBatch()
     {
+
+        // 1. Existing check: Ensure we haven't run out of physical Prefabs in the Inspector
         if (_currentIndex >= _rightDocuments.Count || _currentIndex >= _leftDocuments.Count)
         {
-            Debug.LogWarning("GenerateDocument: No more documents in list!");
+            Debug.LogWarning("GenerateDocument: No more prefabs in list!");
+            return;
+        }
+
+        // 2. NEW check: Ensure the MainDataset still has text for this specific day/row
+        // We check if the current Document index is beyond the size of the current Group (Day)
+        if (!MainDataset.HasMoreDocumentsInCurrentDay())
+        {
+            Debug.Log("<color=orange>GenerateDocument:</color> All text entries for this day have been exhausted. Stopping spawn.");
             return;
         }
 
@@ -89,6 +103,7 @@ public class GenerateDocument : MonoBehaviour
             leftSwitch.SetPairDoc(rightDoc);
         }
     }
+
 
     public static int GetCurrentIndex() => _currentIndex;
 }

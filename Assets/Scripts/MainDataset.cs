@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement; // Required for SceneManager
 
 public static class MainDataset
 {
@@ -17,30 +18,58 @@ public static class MainDataset
         LoadData();
     }
 
-    // Fetches the next document string, traversing columns first, then moving to the next row
+    // --- NEW METHOD: CheckDay ---
+    public static void CheckDay()
+    {
+        string sceneName = SceneManager.GetActiveScene().name;
+
+        // Logic: Look for "Day" in the scene name and extract the number
+        if (sceneName.StartsWith("Day"))
+        {
+            // Remove "Day" from the string to get just the number (e.g., "Day1" -> "1")
+            string dayNumberStr = sceneName.Replace("Day", "");
+
+            if (int.TryParse(dayNumberStr, out int dayNum))
+            {
+                // Set the Group Index based on Day (Day 1 = Group 0, Day 2 = Group 1, etc.)
+                _globalGroupIndex = dayNum - 1;
+                _globalDocIndex = 0; // Reset document progress for the new day
+
+                Debug.Log($"<color=yellow>MainDataset:</color> Scene detected as {sceneName}. Setting Group Index to {_globalGroupIndex}");
+            }
+        }
+        else
+        {
+            Debug.Log($"<color=orange>MainDataset:</color> Current scene '{sceneName}' is not a Day scene. Index remains at {_globalGroupIndex}");
+        }
+    }
+
+    // Fetches the next document string, traversing columns first
     public static string GetNextDocumentContent()
     {
         if (DocumentGroups.Count == 0) return "No Data Loaded";
 
-
-        Debug.Log("Bypassed first if-else GetNextDocumentContent");
         // Check if current group index is valid
         if (_globalGroupIndex < DocumentGroups.Count)
         {
+            // --- FIX: Check if we have already exhausted the current row ---
+            if (_globalDocIndex >= DocumentGroups[_globalGroupIndex].Count)
+            {
+                Debug.LogWarning($"MainDataset: Requested document but Group {_globalGroupIndex} is empty!");
+                return "End of Day Records";
+            }
+
             // Get the specific document in the current batch
             string content = DocumentGroups[_globalGroupIndex][_globalDocIndex];
 
             // Increment the Column (Document)
             _globalDocIndex++;
 
-            // If we've reached the end of the current Row (Batch), move to the next Row
-            if (_globalDocIndex >= DocumentGroups[_globalGroupIndex].Count)
-            {
-                _globalDocIndex = 0;
-                _globalGroupIndex++;
-            }
+            // --- REMOVED: The auto-increment of _globalGroupIndex ---
+            // We no longer move to the next Row automatically. 
+            // We let the Scene change (CheckDay) handle that.
 
-            Debug.Log($"Current Doc[{_globalGroupIndex}][{_globalDocIndex}]");
+            Debug.Log($"Current Doc[{_globalGroupIndex}][{_globalDocIndex - 1}] fetched. Next index: {_globalDocIndex}");
 
             return content;
         }
@@ -112,5 +141,25 @@ public static class MainDataset
     {
         _globalGroupIndex = 0;
         _globalDocIndex = 0;
+    }
+
+    public static bool HasMoreDocumentsInCurrentDay()
+    {
+        // 1. Safety check: Does this Day even exist in our Big List?
+        if (_globalGroupIndex >= DocumentGroups.Count) return false;
+
+        // 2. Grab the specific "Small List" (The Day's Row)
+        List<string> currentDayFolder = DocumentGroups[_globalGroupIndex];
+
+        // 3. Check the length of THAT small list
+        int totalDocsThisDay = currentDayFolder.Count;
+
+        // 4. Compare our current position to the small list's size
+        if (_globalDocIndex < totalDocsThisDay)
+        {
+            return true; // We still have papers to sign today!
+        }
+
+        return false; // Out of papers for this specific Day
     }
 }
