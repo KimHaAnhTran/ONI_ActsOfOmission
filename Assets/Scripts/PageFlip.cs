@@ -16,7 +16,8 @@ public class PageFlip : MonoBehaviour
     [SerializeField] private Sprite _flipLeftSprite;
 
     [Header("Objects to Toggle")]
-    [SerializeField] private List<GameObject> _pageElements = new List<GameObject>();
+    [SerializeField] private List<GameObject> _pageElementsFlipped = new List<GameObject>();
+    [SerializeField] private List<GameObject> _pageElementsDefault = new List<GameObject>();
 
     [Header("Parent Collider Settings")]
     [SerializeField] private Vector2 _parentOffsetClosed = new Vector2(0.7239926f, -0.131645f);
@@ -80,11 +81,17 @@ public class PageFlip : MonoBehaviour
 
 
         // 4. Toggle Page Elements
-        foreach (GameObject element in _pageElements)
+        foreach (GameObject element in _pageElementsFlipped)
         {
             if (element != null)
             {
                 element.SetActive(isOpen);
+            }
+        }
+
+        foreach (GameObject element in _pageElementsDefault) {
+            if (element != null) {
+                element.SetActive(!isOpen);
             }
         }
     }

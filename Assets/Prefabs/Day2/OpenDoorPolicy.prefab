@@ -615,10 +615,11 @@ MonoBehaviour:
   _bookOpenSprite: {fileID: 21300000, guid: f8d44e630cd94134282267fcc12bea39, type: 3}
   _flipRightSprite: {fileID: 21300000, guid: 8f38e28ea118c4c4a81b637eb85d5c9f, type: 3}
   _flipLeftSprite: {fileID: 21300000, guid: 349ec95010e30844c845358929ac19af, type: 3}
-  _pageElements:
+  _pageElementsFlipped:
+  - {fileID: 3621851714222963465}
   - {fileID: 4729229313468049039}
   - {fileID: 5811175849452386738}
-  - {fileID: 3621851714222963465}
+  _pageElementsDefault: []
   _parentOffsetClosed: {x: 0, y: 0}
   _parentSizeClosed: {x: 1.5, y: 2}
   _parentOffsetOpen: {x: -0.7514335, y: 0}
