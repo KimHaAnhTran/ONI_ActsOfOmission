@@ -36,6 +36,7 @@ public class ClickToTranscribe : MonoBehaviour
                 {
                     collider.enabled = false; // Disable interaction globally
                 }
+                
             }
         }
     }
