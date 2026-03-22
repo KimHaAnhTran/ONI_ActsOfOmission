@@ -88,7 +88,7 @@ public class GenerateDocument : MonoBehaviour
             return;
         }
 
-        // --- SPAWN RIGHT DOCUMENT (Restored original logic) ---
+        // --- SPAWN RIGHT DOCUMENT ---
         // 1. Instantiate in world space (null parent)
         GameObject rightPrefab = _rightBatches[currentDay][_localDocIndex];
         GameObject rightDoc = Instantiate(rightPrefab, _rightSpawnPoint.position, _rightSpawnPoint.rotation);
@@ -106,7 +106,7 @@ public class GenerateDocument : MonoBehaviour
         rightDoc.name = $"Doc_R_Day{currentDay + 1}_{_localDocIndex}";
 
 
-        // --- SPAWN LEFT DOCUMENT (Restored original logic) ---
+        // --- SPAWN LEFT DOCUMENT ---
         // 1. Instantiate in world space
         GameObject leftPrefab = _leftBatches[currentDay][_localDocIndex];
         GameObject leftDoc = Instantiate(leftPrefab, _leftSpawnPoint.position, _leftSpawnPoint.rotation);
