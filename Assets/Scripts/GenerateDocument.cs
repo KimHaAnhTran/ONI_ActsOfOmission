@@ -1,13 +1,14 @@
 using UnityEngine;
 using System.Collections.Generic;
 using System;
+using UnityEngine.SceneManagement;
 
 public class GenerateDocument : MonoBehaviour
 {
     public static GenerateDocument Instance { get; private set; }
     public static Action OnSpawnNextBatch;
 
-    [Header("Document Prefabs")]
+    [Header("Master Prefab Pools (Flat Lists)")]
     [SerializeField] private List<GameObject> _leftDocuments = new List<GameObject>();
     [SerializeField] private List<GameObject> _rightDocuments = new List<GameObject>();
 
@@ -19,53 +20,78 @@ public class GenerateDocument : MonoBehaviour
     [SerializeField] private GameObject _leftParent;
     [SerializeField] private GameObject _rightParent;
 
-    private static int _currentIndex = 0;
+    private List<List<GameObject>> _leftBatches = new List<List<GameObject>>();
+    private List<List<GameObject>> _rightBatches = new List<List<GameObject>>();
+
+    private static int _localDocIndex = 0;
 
     private void Awake()
     {
         if (Instance == null) Instance = this;
-        else Destroy(gameObject);
+        else { Destroy(gameObject); return; }
+
+        OrganizePrefabsIntoBatches();
     }
 
     private void Start()
     {
-        // Sync the dataset index with the current scene name
         MainDataset.CheckDay();
-
-        // Then proceed with your normal spawning logic
+        _localDocIndex = 0;
         SpawnBatch();
     }
 
     private void OnEnable() => OnSpawnNextBatch += IncrementAndSpawn;
     private void OnDisable() => OnSpawnNextBatch -= IncrementAndSpawn;
 
+    private void OrganizePrefabsIntoBatches()
+    {
+        int prefabPointer = 0;
+        for (int i = 0; i < MainDataset.DocumentGroups.Count; i++)
+        {
+            List<GameObject> currentLeftDay = new List<GameObject>();
+            List<GameObject> currentRightDay = new List<GameObject>();
+            int docsInThisDay = MainDataset.DocumentGroups[i].Count;
+
+            for (int j = 0; j < docsInThisDay; j++)
+            {
+                if (prefabPointer < _leftDocuments.Count)
+                {
+                    currentLeftDay.Add(_leftDocuments[prefabPointer]);
+                    currentRightDay.Add(_rightDocuments[prefabPointer]);
+                    prefabPointer++;
+                }
+            }
+            _leftBatches.Add(currentLeftDay);
+            _rightBatches.Add(currentRightDay);
+        }
+    }
+
     private void IncrementAndSpawn()
     {
-        _currentIndex++;
+        _localDocIndex++;
         SpawnBatch();
     }
 
     public void SpawnBatch()
     {
+        int currentDay = MainDataset.GetGroupIndex();
 
-        // 1. Existing check: Ensure we haven't run out of physical Prefabs in the Inspector
-        if (_currentIndex >= _rightDocuments.Count || _currentIndex >= _leftDocuments.Count)
-        {
-            Debug.LogWarning("GenerateDocument: No more prefabs in list!");
-            return;
-        }
-
-        // 2. NEW check: Ensure the MainDataset still has text for this specific day/row
-        // We check if the current Document index is beyond the size of the current Group (Day)
         if (!MainDataset.HasMoreDocumentsInCurrentDay())
         {
-            Debug.Log("<color=orange>GenerateDocument:</color> All text entries for this day have been exhausted. Stopping spawn.");
+            Debug.Log("<color=orange>GenerateDocument:</color> All documents for this day have been spawned.");
             return;
         }
 
-        // --- SPAWN RIGHT DOCUMENT ---
+        if (currentDay >= _leftBatches.Count || _localDocIndex >= _leftBatches[currentDay].Count)
+        {
+            Debug.LogError($"GenerateDocument: No Prefab assigned for Day {currentDay} at Index {_localDocIndex}!");
+            return;
+        }
+
+        // --- SPAWN RIGHT DOCUMENT (Restored original logic) ---
         // 1. Instantiate in world space (null parent)
-        GameObject rightDoc = Instantiate(_rightDocuments[_currentIndex], _rightSpawnPoint.position, _rightSpawnPoint.rotation);
+        GameObject rightPrefab = _rightBatches[currentDay][_localDocIndex];
+        GameObject rightDoc = Instantiate(rightPrefab, _rightSpawnPoint.position, _rightSpawnPoint.rotation);
 
         // 2. Force Local Scale BEFORE parenting
         rightDoc.transform.localScale = Vector3.one;
@@ -73,16 +99,17 @@ public class GenerateDocument : MonoBehaviour
         // 3. Set Parent
         rightDoc.transform.SetParent(_rightParent.transform);
 
-        // 4. Force Local Z to 0 (ensures it doesn't spawn behind the desk)
+        // 4. Force Local Z to 0
         Vector3 rightLocalPos = rightDoc.transform.localPosition;
         rightDoc.transform.localPosition = new Vector3(rightLocalPos.x, rightLocalPos.y, 0f);
 
-        rightDoc.name = $"Doc_R_{_currentIndex}";
+        rightDoc.name = $"Doc_R_Day{currentDay + 1}_{_localDocIndex}";
 
 
-        // --- SPAWN LEFT DOCUMENT ---
+        // --- SPAWN LEFT DOCUMENT (Restored original logic) ---
         // 1. Instantiate in world space
-        GameObject leftDoc = Instantiate(_leftDocuments[_currentIndex], _leftSpawnPoint.position, _leftSpawnPoint.rotation);
+        GameObject leftPrefab = _leftBatches[currentDay][_localDocIndex];
+        GameObject leftDoc = Instantiate(leftPrefab, _leftSpawnPoint.position, _leftSpawnPoint.rotation);
 
         // 2. Force Local Scale
         leftDoc.transform.localScale = Vector3.one;
@@ -90,7 +117,11 @@ public class GenerateDocument : MonoBehaviour
         // 3. Set Parent
         leftDoc.transform.SetParent(_leftParent.transform);
 
-        leftDoc.name = $"Doc_L_{_currentIndex}";
+        // 4. Local Z Cleanup (Matches right doc logic)
+        Vector3 leftLocalPos = leftDoc.transform.localPosition;
+        leftDoc.transform.localPosition = new Vector3(leftLocalPos.x, leftLocalPos.y, 0f);
+
+        leftDoc.name = $"Doc_L_Day{currentDay + 1}_{_localDocIndex}";
 
 
         // --- LINKING ---
@@ -104,6 +135,5 @@ public class GenerateDocument : MonoBehaviour
         }
     }
 
-
-    public static int GetCurrentIndex() => _currentIndex;
+    public static int GetCurrentIndex() => _localDocIndex;
 }

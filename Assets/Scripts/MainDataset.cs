@@ -9,8 +9,10 @@ public static class MainDataset
     public static List<List<string>> DocumentGroups { get; private set; } = new List<List<string>>();
 
     // Two indices to traverse the "Table" (Rows and Columns)
-    private static int _globalGroupIndex = 0; // The Row (Batch)
-    private static int _globalDocIndex = 0;   // The Column (Document within Batch)
+    private static int _globalGroupIndex = 0; // The Row (Day)
+    private static int _globalDocIndex = 0;   // The Column (Document within each Day)
+
+    private const string DocumentName = "Sample";
 
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
     private static void Initialize()
@@ -79,11 +81,11 @@ public static class MainDataset
 
     private static void LoadData()
     {
-        TextAsset textFile = Resources.Load<TextAsset>("Documents");
+        TextAsset textFile = Resources.Load<TextAsset>(DocumentName);
 
         if (textFile == null)
         {
-            Debug.LogError("MainDataset: Documents.txt not found in Resources!");
+            Debug.LogError($"MainDataset: {DocumentName}.txt not found in Resources!");
             return;
         }
 
@@ -161,5 +163,10 @@ public static class MainDataset
         }
 
         return false; // Out of papers for this specific Day
+    }
+
+    public static int GetGroupIndex()
+    {
+        return _globalGroupIndex;
     }
 }

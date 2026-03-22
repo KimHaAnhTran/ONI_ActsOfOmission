@@ -3,7 +3,7 @@ using TMPro;
 
 public class ActivatePaperType : MonoBehaviour
 {
-    [SerializeField] private TextMeshProUGUI _paperText; // Drag your TMPro object here
+    [SerializeField] private TextMeshProUGUI _paperText; // Drag TMPro object here
     private bool _hideOnStart = true;
 
     private void Awake()
