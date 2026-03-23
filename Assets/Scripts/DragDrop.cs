@@ -27,6 +27,8 @@ public class DragDrop : MonoBehaviour
 
     private void OnMouseDown()
     {
+        AudiopoolSFX.Instance.Play("SFX_PaperDragDrop");
+
         _mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         // Calculate distance between mouse and object center to prevent snapping
         _dragOffset = _mousePosition - (Vector2)transform.position;

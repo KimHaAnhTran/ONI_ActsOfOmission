@@ -37,7 +37,6 @@ public class GenerateDocument : MonoBehaviour
     {
         MainDataset.CheckDay();
         _localDocIndex = 0;
-        SpawnBatch();
     }
 
     private void OnEnable() => OnSpawnNextBatch += IncrementAndSpawn;
@@ -68,8 +67,11 @@ public class GenerateDocument : MonoBehaviour
 
     private void IncrementAndSpawn()
     {
-        _localDocIndex++;
+        // 1. Spawn the current index (starts at 0)
         SpawnBatch();
+
+        // 2. Increment AFTER spawning so the NEXT call gets the next index
+        _localDocIndex++;
     }
 
     public void SpawnBatch()
@@ -79,6 +81,7 @@ public class GenerateDocument : MonoBehaviour
         if (!MainDataset.HasMoreDocumentsInCurrentDay())
         {
             Debug.Log("<color=orange>GenerateDocument:</color> All documents for this day have been spawned.");
+            GameManager.Instance.StartEndOfDayTransition();
             return;
         }
 
@@ -133,6 +136,8 @@ public class GenerateDocument : MonoBehaviour
             rightSwitch.SetPairDoc(leftDoc);
             leftSwitch.SetPairDoc(rightDoc);
         }
+
+        AudiopoolSFX.Instance.Play("SFX_PaperSlide");
     }
 
     public static int GetCurrentIndex() => _localDocIndex;

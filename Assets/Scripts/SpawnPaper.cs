@@ -50,6 +50,9 @@ public class SpawnPaper : MonoBehaviour
             newPaper.transform.localRotation = _spawnPoint.localRotation;
 
             _hasSpawned = true;
+
+            AudiopoolSFX.Instance.Play("SFX_PaperSlide");
+            AudiopoolSFX.Instance.Play("SFX_ButtonPullUp");
         }
     }
 }

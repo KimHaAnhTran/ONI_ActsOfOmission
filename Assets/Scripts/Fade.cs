@@ -4,7 +4,8 @@ using System.Collections;
 public class Fade : MonoBehaviour
 {
     [Header("Settings")]
-    [SerializeField] private float _fadeSpeed = 1.0f;
+    [SerializeField] private float _fadeDuration = 1.5f; // How long the actual transition takes
+    [SerializeField] private float _fadeDelay = 1.5f;    // How long to wait before starting
 
     private SpriteRenderer _spriteRenderer;
     private BoxCollider2D _collider;
@@ -20,20 +21,17 @@ public class Fade : MonoBehaviour
         c.a = 1f;
         _spriteRenderer.color = c;
 
-        // Block clicks immediately
+        // Block clicks immediately at scene start
         if (_collider != null) _collider.enabled = true;
-
-        // Ensure it sits above everything else
-        _spriteRenderer.sortingOrder = 999;
     }
 
-    public void StartFadeIn() // Screen goes from Black to Clear
+    public void StartFadeIn() // Black to Clear
     {
         StopCurrentFade();
         _fadeCoroutine = StartCoroutine(FadeRoutine(0.0f));
     }
 
-    public void StartFadeOut() // Screen goes from Clear to Black
+    public void StartFadeOut() // Clear to Black
     {
         StopCurrentFade();
         _fadeCoroutine = StartCoroutine(FadeRoutine(1.0f));
@@ -41,19 +39,41 @@ public class Fade : MonoBehaviour
 
     private IEnumerator FadeRoutine(float targetAlpha)
     {
-        // If we are moving TO black, block clicks immediately
+        // 1. If moving TO black, block clicks BEFORE the delay
         if (targetAlpha > 0.5f && _collider != null) _collider.enabled = true;
 
-        Color currentColor = _spriteRenderer.color;
+        // 2. Initial Delay
+        yield return new WaitForSeconds(_fadeDelay);
 
-        while (!Mathf.Approximately(currentColor.a, targetAlpha))
+        float startAlpha = _spriteRenderer.color.a;
+        float elapsedTime = 0f;
+
+        // 3. Smooth Lerp Loop
+        while (elapsedTime < _fadeDuration)
         {
-            currentColor.a = Mathf.MoveTowards(currentColor.a, targetAlpha, _fadeSpeed * Time.deltaTime);
-            _spriteRenderer.color = currentColor;
+            elapsedTime += Time.deltaTime;
+
+            // Calculate progress (0 to 1)
+            float t = elapsedTime / _fadeDuration;
+
+            // Apply SmoothStep to the 't' value for extra "Ease In/Out" smoothness
+            t = t * t * (3f - 2f * t);
+
+            float newAlpha = Mathf.Lerp(startAlpha, targetAlpha, t);
+
+            Color c = _spriteRenderer.color;
+            c.a = newAlpha;
+            _spriteRenderer.color = c;
+
             yield return null;
         }
 
-        // If we are now Clear, unblock the screen
+        // Ensure we hit the exact target at the end
+        Color finalColor = _spriteRenderer.color;
+        finalColor.a = targetAlpha;
+        _spriteRenderer.color = finalColor;
+
+        // 4. If finished fading TO Clear, unblock the screen
         if (targetAlpha < 0.1f && _collider != null) _collider.enabled = false;
     }
 

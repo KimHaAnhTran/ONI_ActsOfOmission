@@ -31,6 +31,7 @@ public class SwitchDocBetweenScreens : MonoBehaviour
 
         if (crossedThreshold)
         {
+            AudiopoolSFX.Instance.Play("SFX_PaperPickUp");
             Switch(mousePosition);
         }
     }

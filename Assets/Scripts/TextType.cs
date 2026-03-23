@@ -128,6 +128,7 @@ public class TextType : MonoBehaviour
         {
             if (c == '\b') // Backspace
             {
+                AudiopoolSFX.Instance.Play("SFX_Typewriter1");
                 if (_currentInput.Length > 0) // In case player can not backspace into less than 0
                 {
                     _currentInput = _currentInput.Substring(0, _currentInput.Length - 1);
@@ -136,6 +137,7 @@ public class TextType : MonoBehaviour
             }
             else if (c == ' ' || c == '\n' || c == '\r') // New Line or Space
             {
+                AudiopoolSFX.Instance.Play("SFX_PaperFolds");
                 // If player's input matches TargetWord
                 // allow player to move onto next word in string[]
                 if (!_hasMistake && _currentInput == TargetWord)
@@ -161,6 +163,7 @@ public class TextType : MonoBehaviour
                 // 1. Are we in a good state?
                 if (!_hasMistake)
                 {
+                    AudiopoolSFX.Instance.Play("SFX_Typewriter1");
                     _currentInput += c; // 2. Add new letter player just pressed
                     ValidateInput(); // 3. Check if this letter is right
                     if (_hasMistake) TriggerShake(); //4. If no, shake it. This is the Input Lock
@@ -184,6 +187,8 @@ public class TextType : MonoBehaviour
     private void UpdateVisuals()
     {
         if (_allWords == null || _wordIndex >= _allWords.Length) return;
+
+        
 
         string target = TargetWord;
         string formattedText = "";

@@ -48,6 +48,7 @@ public class PageFlip : MonoBehaviour
 
     private void OnMouseDown()
     {
+        AudiopoolSFX.Instance.Play("SFX_PaperFlip");
         ToggleBook();
     }
 
