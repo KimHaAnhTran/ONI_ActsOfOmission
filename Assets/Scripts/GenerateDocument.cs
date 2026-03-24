@@ -162,6 +162,10 @@ public class GenerateDocument : MonoBehaviour
     // Since GameManager.cs is not destroyed each scene, this must be the case
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
+
+        MainDataset.CheckDay();
+        _localDocIndex = 0;
+
         _leftSpawnPoint = GameObject.FindGameObjectWithTag("Circle").transform;
         _rightSpawnPoint = transform;
 

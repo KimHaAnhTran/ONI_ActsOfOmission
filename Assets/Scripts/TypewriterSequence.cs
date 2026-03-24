@@ -1,7 +1,8 @@
-using UnityEngine;
-using TMPro;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
+using UnityEngine;
+using UnityEngine.SceneManagement;
 
 [RequireComponent(typeof(AudioSource))] // Ensures there's a speaker for the continuous SFX
 public class TypewriterSequence : MonoBehaviour
@@ -143,4 +144,24 @@ public class TypewriterSequence : MonoBehaviour
         // Final safety check to ensure all characters are visible (including trailing punctuation)
         target.maxVisibleCharacters = totalCharacters;
     }
+
+    private void OnEnable()
+    {
+        // Call "OnSceneLoaded" every time a scene changes
+        SceneManager.sceneLoaded += OnSceneLoaded;
+    }
+
+    private void OnDisable()
+    {
+        // Always unsubscribe when the object is disabled to prevent memory leaks
+        SceneManager.sceneLoaded -= OnSceneLoaded;
+        _actionButton.SetActive(false);
+    }
+
+    // Since GameManager.cs is not destroyed each scene, this must be the case
+    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        _actionButton.SetActive(false);
+    }
+
 }
