@@ -1,51 +1,80 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class ScreenResolutionSetter : MonoBehaviour
 {
-    private void Start()
+    private static GameObject _persistentBlackBarCam;
+
+    private void Awake()
     {
-        ApplyAspectRatio(16f, 9f);
+        // 1. Handle the Black Bar Camera (Singleton Pattern)
+        if (_persistentBlackBarCam == null)
+        {
+            _persistentBlackBarCam = new GameObject("Global_BlackBarCamera");
+            Camera backCam = _persistentBlackBarCam.AddComponent<Camera>();
+            backCam.clearFlags = CameraClearFlags.SolidColor;
+            backCam.backgroundColor = Color.black;
+            backCam.cullingMask = 0;
+            backCam.depth = -100;
+            DontDestroyOnLoad(_persistentBlackBarCam);
+        }
     }
 
-    public void ApplyAspectRatio(float width, float height)
+    private void OnEnable()
     {
-        // 1. Determine the target aspect ratio
+        SceneManager.sceneLoaded += OnSceneLoaded;
+    }
+
+    private void OnDisable()
+    {
+        SceneManager.sceneLoaded -= OnSceneLoaded;
+    }
+
+    private void Start()
+    {
+        // Apply immediately to the current scene camera
+        ApplyToCurrentCamera();
+    }
+
+    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        // Apply every time a new scene is loaded
+        ApplyToCurrentCamera();
+    }
+
+    private void ApplyToCurrentCamera()
+    {
+        Camera cam = Camera.main; // Finds the camera tagged "MainCamera"
+        if (cam != null)
+        {
+            ApplyAspectRatio(16f, 9f, cam);
+        }
+    }
+
+    public void ApplyAspectRatio(float width, float height, Camera cam)
+    {
         float targetAspect = width / height;
-
-        // 2. Determine the current window aspect ratio
         float windowAspect = (float)Screen.width / (float)Screen.height;
-
-        // 3. Current viewport height should be scaled by this amount
         float scaleHeight = windowAspect / targetAspect;
 
-        // 4. Get the camera component
-        Camera camera = GetComponent<Camera>();
-
-        // 5. If window is wider than target (Pillarbox)
         if (scaleHeight < 1.0f)
         {
-            Rect rect = camera.rect;
-
+            Rect rect = cam.rect;
             rect.width = 1.0f;
             rect.height = scaleHeight;
             rect.x = 0;
             rect.y = (1.0f - scaleHeight) / 2.0f;
-
-            camera.rect = rect;
+            cam.rect = rect;
         }
-        // 6. If window is taller than target (Letterbox)
         else
         {
             float scaleWidth = 1.0f / scaleHeight;
-
-            Rect rect = camera.rect;
-
+            Rect rect = cam.rect;
             rect.width = scaleWidth;
             rect.height = 1.0f;
             rect.x = (1.0f - scaleWidth) / 2.0f;
             rect.y = 0;
-
-            camera.rect = rect;
+            cam.rect = rect;
         }
     }
 }
