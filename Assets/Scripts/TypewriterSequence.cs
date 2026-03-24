@@ -88,7 +88,7 @@ public class TypewriterSequence : MonoBehaviour
         if (_actionButton != null)
         {
             _actionButton.SetActive(true);
-            AudiopoolSFX.Instance.Play("SFX_ButtonPress");
+            AudiopoolSFX.Instance.Play("SFX_ButtonPullUp");
         }
     }
 

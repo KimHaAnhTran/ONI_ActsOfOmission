@@ -181,26 +181,41 @@ public class GameManager : MonoBehaviour
     // Since GameManager.cs is not destroyed each scene, this must be the case
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
-        Debug.Log($"GameManager: New Scene Loaded - {scene.name}");
-
-        // Reset your daily stats here
+        // 1. FORCE the day check immediately
         MainDataset.CheckDay();
+        int currentDayIndex = MainDataset.GetGroupIndex();
+        Debug.Log($"GameManager: Scene {scene.name} loaded. Calculated Day Index: {currentDayIndex}");
+
+        // 2. Reset stats
         TotalErrors = 0;
-        TotalCharactersTyped = 0; 
+        TotalCharactersTyped = 0;
         TotalTypingTime = 0;
 
+        // 3. UI Setup
+        if (_endTextGroup != null) _endTextGroup.SetActive(false);
 
-        _endTextGroup.SetActive(false);
-        _openingTextGroup.SetActive(true);
+        // We set this to true AFTER we update the text
+        if (_openingTextGroup != null) _openingTextGroup.SetActive(true);
 
+        // 4. Update the UI
+        if (ChapterNameUpdate.Instance != null)
+        {
+            Debug.Log("Current Day Index: " + currentDayIndex);
+            ChapterNameUpdate.Instance.UpdateChapterUI(currentDayIndex);
+        }
+        else
+        {
+            Debug.Log("Child null");
+            // If Instance is null, find it manually (backup for first scene load)
+            GetComponentInChildren<ChapterNameUpdate>().UpdateChapterUI(currentDayIndex);
+        }
 
-        // Find the sequence script on the newly activated object and trigger it
+        // 5. Trigger Typewriter
         TypewriterSequence seq = _openingTextGroup.GetComponent<TypewriterSequence>();
         if (seq != null)
         {
             seq.StartSequence();
         }
-
     }
 
 }

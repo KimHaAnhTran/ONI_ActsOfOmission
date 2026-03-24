@@ -1105,6 +1105,7 @@ GameObject:
   - component: {fileID: 243789838}
   - component: {fileID: 243789837}
   - component: {fileID: 243789839}
+  - component: {fileID: 243789841}
   - component: {fileID: 243789840}
   m_Layer: 0
   m_Name: GameManager
@@ -1295,7 +1296,7 @@ MonoBehaviour:
     volume: 0.051
     clip: {fileID: 0}
   - fileName: SFX_PaperWobbles
-    volume: 0.053
+    volume: 0.032
     clip: {fileID: 0}
   - fileName: SFX_PaperSlide
     volume: 0.096
@@ -1310,8 +1311,24 @@ MonoBehaviour:
     volume: 0.153
     clip: {fileID: 0}
   - fileName: SFX_PaperFolds
-    volume: 0.153
+    volume: 0.202
     clip: {fileID: 0}
+--- !u!114 &243789841
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 243789832}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 78ef821477958d0429b96c76712e6250, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _chapterText: {fileID: 404316675}
+  _chapterNameText: {fileID: 874040057}
+  _descriptorText: {fileID: 1285458491}
+  _endOfChapterText: {fileID: 1704758453}
 --- !u!1 &313338441
 GameObject:
   m_ObjectHideFlags: 0
@@ -4838,11 +4855,9 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: '1895, Cuba rebels against her Spanish colonizers.
-
-    1898, the USS Maine
-    is purportedly blown by Spain.                           America, threatened,
-    cries <color=#FFF540>war.</color>'
+  m_text: "1919, TREATY OF VERSAILLES ENDS GREAT WAR.                                           
+    U.S. REJECTS LEAGUE OF NATIONS, RETURNS TO <color=#FFF540>ISOLATIONISM</color>.\\nROARING
+    20\u2019S PROCEEDS."
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 770b08e6fd8493148a85e5ab955b0759, type: 2}
   m_sharedMaterial: {fileID: 3223480317742548916, guid: 770b08e6fd8493148a85e5ab955b0759, type: 2}
@@ -5905,7 +5920,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1493298539
 RectTransform:
   m_ObjectHideFlags: 0
@@ -7123,7 +7138,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: END OF CHAPTER 1.
+  m_text: END OF CHAPTER I.
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 770b08e6fd8493148a85e5ab955b0759, type: 2}
   m_sharedMaterial: {fileID: 3223480317742548916, guid: 770b08e6fd8493148a85e5ab955b0759, type: 2}
