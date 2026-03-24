@@ -11,10 +11,14 @@ public class Fade : MonoBehaviour
     private BoxCollider2D _collider;
     private Coroutine _fadeCoroutine;
 
+    [SerializeField] private bool _isMenuFade = false;
+
     private void Awake()
     {
         _spriteRenderer = GetComponent<SpriteRenderer>();
         _collider = GetComponent<BoxCollider2D>();
+
+        if (_isMenuFade) return;
 
         // FORCE BLACK IMMEDIATELY
         Color c = _spriteRenderer.color;

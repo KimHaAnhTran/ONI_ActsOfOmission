@@ -2,9 +2,16 @@ using UnityEngine;
 
 public class PaperBounceEntry : MonoBehaviour
 {
+
     [Header("Movement Settings")]
     [SerializeField] private Transform _targetLocal; // Set the desired local Y goal in Inspector
     [SerializeField] private float _smoothTime = 0.3f;
+
+    public Transform TargetLocal
+    {
+        get => _targetLocal;
+        set => _targetLocal = value;
+    }
 
     [Header("Bounce Settings")]
     [SerializeField] private float _bounceAmplitude = 0.1f;

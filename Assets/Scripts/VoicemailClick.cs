@@ -51,7 +51,7 @@ public class VoicemailClick : MonoBehaviour
         if (_isClicked) return;
         _isClicked = true;
 
-        AudiopoolSFX.Instance.Play("SFX_ButtonPullUp");
+        AudiopoolSFX.Instance.Play("SFX_CassetteClick");
 
         StopHover(); // Stop any active hover lerp immediately
         StartCoroutine(AnimateAndTrigger());
@@ -111,6 +111,8 @@ public class VoicemailClick : MonoBehaviour
             yield return null;
         }
 
+        yield return new WaitForSeconds(0.25f);
+
         // --- PHASE 3: TRIGGER DIALOGUE & DESTROY ---
         if (GameManager.Instance != null)
         {
@@ -120,8 +122,6 @@ public class VoicemailClick : MonoBehaviour
         {
             Debug.LogError("VoicemailClick.cs: GameManager Instance not found!");
         }
-
-
         Destroy(gameObject);
     }
 }

@@ -47,6 +47,9 @@ public class PalDialogueController : MonoBehaviour
     {
         StopAllCoroutines();
 
+        AudiopoolSFX.Instance.Play("SFX_CassetteStart");
+        
+
         AudioClip voiceClip = Resources.Load<AudioClip>("Audio/Pal Dialogue/" + fileName);
         // Changed path to "Audio Transcript" as per your TriggerDialogue logic
         TextAsset transcript = Resources.Load<TextAsset>("Audio Transcript/" + fileName);
@@ -109,6 +112,8 @@ public class PalDialogueController : MonoBehaviour
 
         // --- TRIGGER THE DOCUMENTS ---
         // This tells GenerateDocument to spawn the first batch now that the talk is over
+        AudiopoolSFX.Instance.Play("SFX_CassetteStop");
+        yield return new WaitForSeconds(1f);
         GenerateDocument.OnSpawnNextBatch?.Invoke();
     }
 

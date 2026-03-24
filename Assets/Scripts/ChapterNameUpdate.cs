@@ -12,6 +12,8 @@ public class ChapterNameUpdate : MonoBehaviour
     [SerializeField] private TextMeshProUGUI _chapterNameText;
     [SerializeField] private TextMeshProUGUI _descriptorText;
     [SerializeField] private TextMeshProUGUI _endOfChapterText;
+    // --- NEW: Reference for the Year text (e.g., (1890-1898)) ---
+    [SerializeField] private TextMeshProUGUI _yearText;
 
     private List<ChapterData> _chapters = new List<ChapterData>();
 
@@ -21,6 +23,7 @@ public class ChapterNameUpdate : MonoBehaviour
         public string Name;
         public string Descriptor;
         public string End;
+        public string Year;
     }
 
     private void Awake()
@@ -46,14 +49,16 @@ public class ChapterNameUpdate : MonoBehaviour
         {
             string[] lines = section.Trim().Split(new[] { '\n', '\r' }, StringSplitOptions.RemoveEmptyEntries);
 
-            if (lines.Length >= 4)
+            // --- Checking for at least 5 lines per section ---
+            if (lines.Length >= 5)
             {
                 _chapters.Add(new ChapterData
                 {
                     Chapter = lines[0].Trim(),
                     Name = lines[1].Trim(),
                     Descriptor = lines[2].Trim().Replace("\\n", "\n"),
-                    End = lines[3].Trim()
+                    End = lines[3].Trim(),
+                    Year = lines[4].Trim()
                 });
             }
         }
@@ -77,11 +82,12 @@ public class ChapterNameUpdate : MonoBehaviour
         ChapterData data = _chapters[dayIndex];
 
         // Debug to see if it's actually changing
-        Debug.Log($"Updating UI to: {data.Name}");
+        Debug.Log($"Updating UI to: {data.Name} with Years: {data.Year}");
 
         if (_chapterText) _chapterText.text = data.Chapter;
         if (_chapterNameText) _chapterNameText.text = data.Name;
         if (_descriptorText) _descriptorText.text = data.Descriptor;
         if (_endOfChapterText) _endOfChapterText.text = data.End;
+        if (_yearText) _yearText.text = data.Year;
     }
 }

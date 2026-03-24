@@ -24,6 +24,8 @@ public class TypewriterSequence : MonoBehaviour
     [SerializeField] private GameObject _actionButton;
     [SerializeField] private float _delayBeforeButton = 0.5f;
 
+    [SerializeField] private bool _isEndScene = false;
+
     private AudioSource _audioSource; // Internal reference to the speaker
 
     private void Awake()
@@ -42,6 +44,12 @@ public class TypewriterSequence : MonoBehaviour
         if (_actionButton != null) _actionButton.SetActive(false);
     }
 
+
+    private void Start()
+    {
+        if (!_isEndScene) return;
+        StartSequence();
+    }
     // Change private void Start() to this:
     public void StartSequence()
     {

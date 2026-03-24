@@ -15,6 +15,9 @@ public class GameManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI _rightScoreText;
     [SerializeField] private float _delayBetweenElements = 1.0f;
 
+    [Header("Cleanup Settings")]
+    [SerializeField] private string _endSceneName = "Z_Ending"; // Change this to your actual final scene name
+
     // --- STAT TRACKING ---
     public static int TotalErrors { get; set; }
     public static int TotalCharactersTyped { get; set; } // Change this from Words to Characters
@@ -154,16 +157,33 @@ public class GameManager : MonoBehaviour
 
     private IEnumerator LoadSceneRoutine()
     {
-        // 1. Play the sound
-        AudiopoolSFX.Instance.Play("SFX_ButtonPress");
-
         yield return new WaitForSeconds(0.5f);
 
-        // 4. Now switch scenes safely
-        int currentDay = MainDataset.GetGroupIndex() + 1;
-        string nextDayScene = "Day" + (currentDay + 1);
-        SceneManager.LoadScene(nextDayScene);
+        // Get the day number we just finished (Day 1 = 1, Day 4 = 4)
+        int finishedDay = MainDataset.GetGroupIndex() + 1;
 
+        // CHECK: If we just finished the last day, go to the End Scene
+        if (finishedDay >= 4)
+        {
+            Fade fader = GameObject.FindWithTag("Fade2").GetComponent<Fade>();
+
+            if (fader != null)
+            {
+                fader.StartFadeOut();
+                yield return new WaitForSeconds(4.0f); // Wait for fade 
+            }
+
+            Debug.Log("GameManager: All days complete. Loading End Scene.");
+            SceneManager.LoadScene(_endSceneName);
+            Destroy(gameObject);
+        }
+        else
+        {
+            // Otherwise, proceed to the next day
+            string nextDayScene = "Day" + (finishedDay + 1);
+            Debug.Log($"GameManager: Loading {nextDayScene}");
+            SceneManager.LoadScene(nextDayScene);
+        }
     }
 
     private void OnEnable()
@@ -181,6 +201,17 @@ public class GameManager : MonoBehaviour
     // Since GameManager.cs is not destroyed each scene, this must be the case
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
+
+        // --- NEW CLEANUP CHECK ---
+        // If we have arrived at the final scene, this manager is no longer needed.
+        if (scene.name == _endSceneName)
+        {
+            Debug.Log("GameManager: Final scene reached. Destroying GameManager.");
+            Instance = null; // Clear the static instance so it doesn't point to a dead object
+            Destroy(this);
+            return; // Exit the method so we don't run the rest of the setup logic
+        }
+
         // 1. FORCE the day check immediately
         MainDataset.CheckDay();
         int currentDayIndex = MainDataset.GetGroupIndex();

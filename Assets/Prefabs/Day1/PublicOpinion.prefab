@@ -846,7 +846,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_text: "Now suddenly, the nation is hurried into war. \nAmerica compels a weak
-    nation to fight <i>without</i> considering Spain\u2019s earnest and <i>repeated</i>
+    nation to fight <i>without</i> considering Spain's earnest and <i>repeated</i>
     offers to meet every legitimate demand of the United States!\n"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 95c44eae1d048a744a5f90acb05550f4, type: 2}
