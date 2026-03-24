@@ -34,7 +34,6 @@ public class PalDialogueController : MonoBehaviour
         if (Instance == null)
         {
             Instance = this;
-            DontDestroyOnLoad(gameObject);
             _audioSource = GetComponent<AudioSource>();
             _backgroundBox.gameObject.SetActive(false);
         }

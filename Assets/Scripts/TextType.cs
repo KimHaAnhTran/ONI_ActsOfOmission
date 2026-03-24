@@ -37,6 +37,10 @@ public class TextType : MonoBehaviour
     private Coroutine _visualsCoroutine;
     [SerializeField] private float _startDelay = 1f;
 
+    // --- NEW STATS DATA ---
+    private float _docStartTime; // When the player actually started typing this doc
+    private bool _timerActive = false; // Is the clock running?
+
     // This data type is Expression Bodied Property in C#, read-only
     // If everything goes right (list not empty, wordIndex within bounds), return word player needs to type
     private string TargetWord => (_allWords != null && _wordIndex < _allWords.Length) ? _allWords[_wordIndex] : "";
@@ -59,6 +63,9 @@ public class TextType : MonoBehaviour
             _wordIndex = 0;
             _currentInput = "";
             _hasMistake = false;
+            
+            // --- RESET DOC TIMER ---
+            _timerActive = false; 
 
             if (_visualsCoroutine != null) StopCoroutine(_visualsCoroutine);
             _visualsCoroutine = StartCoroutine(DelayedStartRoutine());
@@ -117,60 +124,69 @@ public class TextType : MonoBehaviour
 
     void Update()
     {
-        // Don't process typing or visuals if we can't type 
-        // OR if we are still in the initial delay period
         if (!_canType || _allWords == null || _visualsCoroutine != null) return;
 
-        // Check each character in inputted string
-        // Input.inputString captures every key pressed since last frame
-        // It's checking every frame for any new 'c'
-        foreach (char c in Input.inputString) 
+        // Accumulate time only while typing is active and allowed
+        if (_timerActive)
         {
+            GameManager.TotalTypingTime += Time.deltaTime;
+        }
+
+        foreach (char c in Input.inputString)
+        {
+            // Start timer on first real keypress
+            if (!_timerActive && !char.IsControl(c))
+            {
+                _timerActive = true;
+            }
+
             if (c == '\b') // Backspace
             {
-                AudiopoolSFX.Instance.Play("SFX_Typewriter1");
-                if (_currentInput.Length > 0) // In case player can not backspace into less than 0
+                AudiopoolSFX.Instance.Play("SFX_ButtonPullUp");
+                if (_currentInput.Length > 0)
                 {
                     _currentInput = _currentInput.Substring(0, _currentInput.Length - 1);
                     ValidateInput();
                 }
             }
-            else if (c == ' ' || c == '\n' || c == '\r') // New Line or Space
+            else if (c == ' ' || c == '\n' || c == '\r') // Word Completion Keys
             {
-                AudiopoolSFX.Instance.Play("SFX_PaperFolds");
-                // If player's input matches TargetWord
-                // allow player to move onto next word in string[]
+                // If the word is correct, move to the next word
                 if (!_hasMistake && _currentInput == TargetWord)
                 {
+                    AudiopoolSFX.Instance.Play("SFX_ButtonPullUp");
+
+                    // --- CHARACTER TRACKING ---
+                    // We count the 'space' as a character for WPM accuracy
+                    GameManager.TotalCharactersTyped++;
+
                     _wordIndex++;
                     _currentInput = "";
 
                     if (_wordIndex >= _allWords.Length)
                         FinishDocument();
                 }
-                
-                // If player New Line or Space at wrong time
-                // Trigger shake wrong
                 else
                 {
+                    // Trying to space out of a wrong/incomplete word
                     TriggerShake();
                 }
             }
-
-            // Normal text input and check
-            else
+            else // Normal Letter Input
             {
-                // 1. Are we in a good state?
                 if (!_hasMistake)
                 {
                     AudiopoolSFX.Instance.Play("SFX_Typewriter1");
-                    _currentInput += c; // 2. Add new letter player just pressed
-                    ValidateInput(); // 3. Check if this letter is right
-                    if (_hasMistake) TriggerShake(); //4. If no, shake it. This is the Input Lock
+                    _currentInput += c;
+
+                    // --- CHARACTER TRACKING ---
+                    GameManager.TotalCharactersTyped++;
+
+                    ValidateInput();
+                    if (_hasMistake) TriggerShake();
                 }
                 else
                 {
-                    // 5. Already in a bad state before this key is pressed
                     TriggerShake();
                 }
             }
@@ -229,6 +245,11 @@ public class TextType : MonoBehaviour
 
     private void TriggerShake()
     {
+        AudiopoolSFX.Instance.Play("SFX_PaperWobbles");
+
+        // --- LOG ERROR ---
+        GameManager.TotalErrors++;
+
         // Safety reset mechanism
         if (_shakeCoroutine != null) StopCoroutine(_shakeCoroutine); // If player types another wrong letter WHILE it's shaking, stop current coroutine
         _shakeCoroutine = StartCoroutine(ShakeRoutine()); // Restart Coroutine
@@ -251,8 +272,10 @@ public class TextType : MonoBehaviour
     // Document is finish trascribed
     private void FinishDocument()
     {
+        _timerActive = false; // Just stop the clock
+
         TypewriterKey.CanType = false;
-        _textMesh.text = ""; // Clear the ghost text
+        _textMesh.text = "";
         OnCurrentDocumentFinished?.Invoke();
         _wordIndex = 0;
     }

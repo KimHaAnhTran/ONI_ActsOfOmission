@@ -49,7 +49,11 @@ public class DiscardParcel : MonoBehaviour
         _currentTargetY = _yHidden.position.y;
     }
 
-    private void OnMouseEnter() => _isMouseOver = true;
+    private void OnMouseEnter()
+    {
+        AudiopoolSFX.Instance.Play("SFX_PaperDragDrop");
+        _isMouseOver = true;
+    }
     private void OnMouseExit()
     {
         _isMouseOver = false;
@@ -84,6 +88,7 @@ public class DiscardParcel : MonoBehaviour
 
     private IEnumerator DiscardParcelRoutine(GameObject parcel)
     {
+        AudiopoolSFX.Instance.Play("SFX_PaperSlide");
         SendParcel.OnParcelProcessed?.Invoke();
 
         GameObject[] documents = GameObject.FindGameObjectsWithTag("Document");

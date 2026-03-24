@@ -42,6 +42,7 @@ public class BookmarkFlip : MonoBehaviour
 
     private void OnMouseDown()
     {
+        AudiopoolSFX.Instance.Play("SFX_PaperFlip");
         ToggleBook();
     }
 

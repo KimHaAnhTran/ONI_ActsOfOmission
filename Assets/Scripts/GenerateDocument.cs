@@ -14,7 +14,7 @@ public class GenerateDocument : MonoBehaviour
 
     [Header("Spawn Locations")]
     [SerializeField] private Transform _leftSpawnPoint;
-    [SerializeField] private Transform _rightSpawnPoint;
+    private Transform _rightSpawnPoint;
 
     [Header("Parent Containers")]
     [SerializeField] private GameObject _leftParent;
@@ -37,10 +37,25 @@ public class GenerateDocument : MonoBehaviour
     {
         MainDataset.CheckDay();
         _localDocIndex = 0;
+
+        _leftSpawnPoint = GameObject.FindGameObjectWithTag("Circle").transform;
+        _rightSpawnPoint = transform;
+        
+
+        _leftParent = GameObject.FindGameObjectWithTag("LeftDesk");
+        _rightParent = GameObject.FindGameObjectWithTag("RightDesk");
     }
 
-    private void OnEnable() => OnSpawnNextBatch += IncrementAndSpawn;
-    private void OnDisable() => OnSpawnNextBatch -= IncrementAndSpawn;
+    private void OnEnable()
+    {
+        OnSpawnNextBatch += IncrementAndSpawn;
+        SceneManager.sceneLoaded += OnSceneLoaded;
+    }
+    private void OnDisable()
+    {
+        OnSpawnNextBatch -= IncrementAndSpawn;
+        SceneManager.sceneLoaded -= OnSceneLoaded;
+    }
 
     private void OrganizePrefabsIntoBatches()
     {
@@ -141,4 +156,18 @@ public class GenerateDocument : MonoBehaviour
     }
 
     public static int GetCurrentIndex() => _localDocIndex;
+
+
+
+    // Since GameManager.cs is not destroyed each scene, this must be the case
+    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        _leftSpawnPoint = GameObject.FindGameObjectWithTag("Circle").transform;
+        _rightSpawnPoint = transform;
+
+
+        _leftParent = GameObject.FindGameObjectWithTag("LeftDesk");
+        _rightParent = GameObject.FindGameObjectWithTag("RightDesk");
+    }
+
 }

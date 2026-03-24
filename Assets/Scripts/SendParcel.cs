@@ -57,7 +57,12 @@ public class SendParcel : MonoBehaviour
     }
 
     // Unity built-in mouse tracking
-    private void OnMouseEnter() => _isMouseOver = true;
+    private void OnMouseEnter()
+    {
+        _isMouseOver = true;
+        AudiopoolSFX.Instance.Play("SFX_PaperDragDrop");
+    }
+
     private void OnMouseExit()
     {
         _isMouseOver = false;
@@ -94,6 +99,8 @@ public class SendParcel : MonoBehaviour
 
     private IEnumerator PullParcelRoutine(GameObject parcel)
     {
+        AudiopoolSFX.Instance.Play("SFX_PaperSlide");
+
         // Fire global signal so BOTH buttons hide immediately
         OnParcelProcessed?.Invoke();
 

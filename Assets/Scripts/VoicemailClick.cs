@@ -30,7 +30,7 @@ public class VoicemailClick : MonoBehaviour
         // Cancel hover if already clicked/exiting
         if (_isClicked) return;
 
-        AudiopoolSFX.Instance.Play("SFX_PaperFolds");
+        AudiopoolSFX.Instance.Play("SFX_PaperDragDrop");
 
         StopHover();
         _hoverCoroutine = StartCoroutine(MoveToPosition(_basePosition + new Vector3(0, _hoverYOffset, 0)));
@@ -51,7 +51,7 @@ public class VoicemailClick : MonoBehaviour
         if (_isClicked) return;
         _isClicked = true;
 
-        AudiopoolSFX.Instance.Play("SFX_ButtonPress");
+        AudiopoolSFX.Instance.Play("SFX_ButtonPullUp");
 
         StopHover(); // Stop any active hover lerp immediately
         StartCoroutine(AnimateAndTrigger());

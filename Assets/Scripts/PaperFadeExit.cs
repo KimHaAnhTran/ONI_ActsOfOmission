@@ -43,6 +43,8 @@ public class PaperFadeExit : MonoBehaviour
     {
         _isExiting = true;
 
+        AudiopoolSFX.Instance.Play("SFX_PaperSlide");
+
         // 1. Spawn the replacement object at the current position
         if (_parcelSmallPrefab != null && _parcelPrefab != null)
         {

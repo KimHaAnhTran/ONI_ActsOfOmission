@@ -42,9 +42,19 @@ public class TypewriterSequence : MonoBehaviour
         if (_actionButton != null) _actionButton.SetActive(false);
     }
 
-    private void Start()
+    // Change private void Start() to this:
+    public void StartSequence()
     {
-        // Fetch the clip and volume from your Audiopool once at the start
+        // Stop any existing sequence just in case
+        StopAllCoroutines();
+
+        // Reset all text elements to 0 visibility before starting
+        foreach (var step in _sequence)
+        {
+            if (step.textElement != null) step.textElement.maxVisibleCharacters = 0;
+        }
+
+        // Fetch SFX data
         AudiopoolSFX.SFXData sfxData = AudiopoolSFX.Instance.GetSFXData(_typingSfxName);
         if (sfxData != null)
         {
@@ -88,6 +98,9 @@ public class TypewriterSequence : MonoBehaviour
         target.ForceMeshUpdate();
         TMP_TextInfo textInfo = target.textInfo;
         int totalCharacters = textInfo.characterCount;
+
+        // SAFETY: If the text is empty, just stop and return
+        if (totalCharacters <= 0) yield break;
 
         float accumulatedTime = 0;
         int visibleCount = 0;

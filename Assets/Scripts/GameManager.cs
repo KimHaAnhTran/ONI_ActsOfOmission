@@ -1,10 +1,29 @@
 using System.Collections;
+using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
     public static GameManager Instance { get; private set; }
+
+    [Header("Opening Day UI")]
+    [SerializeField] private GameObject _openingTextGroup;
+
+    [Header("End of Day UI")]
+    [SerializeField] private GameObject _endTextGroup;
+    [SerializeField] private TextMeshProUGUI _rightScoreText;
+    [SerializeField] private float _delayBetweenElements = 1.0f;
+
+    // --- STAT TRACKING ---
+    public static int TotalErrors { get; set; }
+    public static int TotalCharactersTyped { get; set; } // Change this from Words to Characters
+    public static float TotalTypingTime { get; set; }
+
+    // Use the standard 5-character-per-word formula
+    public static float CurrentWPM => TotalTypingTime > 0
+        ? ((TotalCharactersTyped / 5f) / (TotalTypingTime / 60f))
+        : 0;
 
     private void Awake()
     {
@@ -18,11 +37,20 @@ public class GameManager : MonoBehaviour
             Destroy(gameObject);
             return;
         }
+
+        // Ensure UI is hidden at start
+        if (_endTextGroup != null) _endTextGroup.SetActive(false);
     }
 
     private void Start()
     {
+        _endTextGroup.SetActive(false);
+        _openingTextGroup.SetActive(true);
+
         MainDataset.CheckDay();
+        // Reset stats at the start of every new day/scene
+        TotalErrors = 0;
+        TotalTypingTime = 0;
     }
 
     // Called from VoicemailClick.cs
@@ -77,24 +105,102 @@ public class GameManager : MonoBehaviour
 
     private IEnumerator EndOfDaySequence()
     {
-        // 1. Find the fader in the current scene
         Fade fader = GameObject.FindWithTag("Fade").GetComponent<Fade>();
 
         if (fader != null)
         {
-            // 2. Start fading to Black (Clear to Black)
             fader.StartFadeOut();
-
-            // 3. Wait for the Fade delay + Fade duration (total transition time)
-            // We wait slightly longer (0.5s) to let the player sit in the dark for a moment
-            yield return new WaitForSeconds(3.5f);
+            yield return new WaitForSeconds(3.0f); // Wait for fade to settle
         }
 
-        // 4. Calculate next scene name (e.g., "Day1" -> "Day2")
+        // --- TRIGGER RESULTS SCREEN ---
+        if (_endTextGroup != null)
+        {
+            yield return StartCoroutine(RevealResultsRoutine());
+        }
+    }
+
+    private IEnumerator RevealResultsRoutine()
+    {
+        // 1. Prepare the numbers
+        _rightScoreText.text = $"{Mathf.RoundToInt(CurrentWPM)}\n{TotalErrors}";
+
+        // 2. Hide all children initially
+        foreach (Transform child in _endTextGroup.transform)
+        {
+            child.gameObject.SetActive(false);
+        }
+
+        // 3. Enable the parent group
+        _endTextGroup.SetActive(true);
+
+        // 4. Reveal children one by one with a delay
+        foreach (Transform child in _endTextGroup.transform)
+        {
+            child.gameObject.SetActive(true);
+            
+            // Play a small "blip" sound
+            AudiopoolSFX.Instance.Play("SFX_PaperFolds"); 
+
+            yield return new WaitForSeconds(_delayBetweenElements);
+        }
+    }
+
+    // Method for your "Next Chapter" button to call
+    public void LoadNextScene()
+    {
+        StartCoroutine(LoadSceneRoutine());
+    }
+
+    private IEnumerator LoadSceneRoutine()
+    {
+        // 1. Play the sound
+        AudiopoolSFX.Instance.Play("SFX_ButtonPress");
+
+        yield return new WaitForSeconds(0.5f);
+
+        // 4. Now switch scenes safely
         int currentDay = MainDataset.GetGroupIndex() + 1;
         string nextDayScene = "Day" + (currentDay + 1);
-
-        // 5. Load the next scene
         SceneManager.LoadScene(nextDayScene);
+
     }
+
+    private void OnEnable()
+    {
+        // Call "OnSceneLoaded" every time a scene changes
+        SceneManager.sceneLoaded += OnSceneLoaded;
+    }
+
+    private void OnDisable()
+    {
+        // Always unsubscribe when the object is disabled to prevent memory leaks
+        SceneManager.sceneLoaded -= OnSceneLoaded;
+    }
+
+    // Since GameManager.cs is not destroyed each scene, this must be the case
+    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        Debug.Log($"GameManager: New Scene Loaded - {scene.name}");
+
+        // Reset your daily stats here
+        MainDataset.CheckDay();
+        TotalErrors = 0;
+        TotalCharactersTyped = 0; 
+        TotalTypingTime = 0;
+
+
+        _endTextGroup.SetActive(false);
+        _openingTextGroup.SetActive(true);
+
+
+        // Find the sequence script on the newly activated object and trigger it
+        TypewriterSequence seq = _openingTextGroup.GetComponent<TypewriterSequence>();
+        if (seq != null)
+        {
+            seq.StartSequence();
+        }
+
+    }
+
 }
