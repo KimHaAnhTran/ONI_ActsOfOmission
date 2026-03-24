@@ -4068,6 +4068,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1536637505}
   - component: {fileID: 1536637506}
+  - component: {fileID: 1536637507}
   m_Layer: 0
   m_Name: BackgoundMusic
   m_TagString: Untagged
@@ -4105,6 +4106,18 @@ MonoBehaviour:
   _musicTrack: {fileID: 8300000, guid: da341bbbb62d1d544ac58603645ffd9f, type: 3}
   _volume: 0.04
   _playOnAwake: 1
+--- !u!114 &1536637507
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1536637504}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1ed46b7d0d9e71b4b8d0042714ab31dd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1569375903
 GameObject:
   m_ObjectHideFlags: 0
@@ -4969,9 +4982,9 @@ SceneRoots:
   m_Roots:
   - {fileID: 519420032}
   - {fileID: 1385220285}
+  - {fileID: 1536637505}
   - {fileID: 243789834}
   - {fileID: 1459575233}
   - {fileID: 2147322832}
   - {fileID: 210745326}
   - {fileID: 1509464612}
-  - {fileID: 1536637505}
