@@ -121,7 +121,14 @@ public class DiscardParcel : MonoBehaviour
         Destroy(parcel);
         foreach (GameObject doc in documents) Destroy(doc);
 
-        // Trigger next batch
-        GenerateDocument.OnSpawnNextBatch?.Invoke();
+        // --- LOGIC FOR VOICEMAIL DEPENDING ON DISCARD OR SEND DECISION ---
+        // 1. Try to find a Voicemail for "Send"
+        bool hasVoicemail = PalReactionsController.Instance.TryTriggerReaction("Discard");
+
+        // 2. If no voicemail exists, just spawn the next document immediately
+        if (!hasVoicemail)
+        {
+            GenerateDocument.OnSpawnNextBatch?.Invoke();
+        }
     }
 }

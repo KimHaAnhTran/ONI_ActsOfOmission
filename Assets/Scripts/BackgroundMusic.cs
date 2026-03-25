@@ -7,7 +7,7 @@ public class BackgroundMusic : MonoBehaviour
     [Header("Audio Settings")]
     [SerializeField] private AudioClip _musicTrack;
     [Range(0f, 1f)]
-    [SerializeField] private float _volume = 0.5f;
+    [SerializeField] private float _volume = 0.04f;
     [SerializeField] private bool _playOnAwake = true;
 
     private AudioSource _audioSource;
@@ -18,12 +18,16 @@ public class BackgroundMusic : MonoBehaviour
         if (Instance == null)
         {
             Instance = this;
+            // Safety check: DontDestroyOnLoad only works on root objects
+            transform.parent = null;
+
             DontDestroyOnLoad(gameObject);
             SetupAudioSource();
         }
         else
         {
             Destroy(gameObject);
+            return;
         }
     }
 

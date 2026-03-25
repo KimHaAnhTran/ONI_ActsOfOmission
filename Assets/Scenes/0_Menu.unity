@@ -897,6 +897,7 @@ MonoBehaviour:
   _spawnPoint: {fileID: 210745326}
   _firstSceneName: Day1
   _menuPaperTarget: {fileID: 1509464612}
+  _textMeshPro: {fileID: 1136681229}
 --- !u!1 &497507484
 GameObject:
   m_ObjectHideFlags: 0
@@ -2719,7 +2720,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -0.97}
+  m_AnchoredPosition: {x: 0, y: -1.359}
   m_SizeDelta: {x: 4.4693, y: 0.6052}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1136681229
@@ -2742,9 +2743,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: '
-
-    ACTS OF OMMISSION'
+  m_text: ACTS OF OMMISSION
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 770b08e6fd8493148a85e5ab955b0759, type: 2}
   m_sharedMaterial: {fileID: 3223480317742548916, guid: 770b08e6fd8493148a85e5ab955b0759, type: 2}

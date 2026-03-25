@@ -49,6 +49,14 @@ public class SwitchDocBetweenScreens : MonoBehaviour
 
     private void Switch(Vector2 mousePos)
     {
+        // --- TUTORIAL TEXT HIDING ---
+        if (GenerateDocument.Instance != null)
+        {
+            GenerateDocument.Instance.HideTutorialText();
+            GenerateDocument.Instance.HideParcelTutorialText();
+        }
+        // ---------------------------------
+
         // 1. Stop dragging this one
         _dragDrop.IsDragging = false;
 

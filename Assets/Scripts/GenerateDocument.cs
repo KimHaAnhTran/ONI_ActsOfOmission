@@ -20,6 +20,10 @@ public class GenerateDocument : MonoBehaviour
     [SerializeField] private GameObject _leftParent;
     [SerializeField] private GameObject _rightParent;
 
+    // The instruction text gameobject you want to show only on the first document of the first day
+    private GameObject _tutorialInstructionText;
+    private GameObject _tutorialParcelInstructionText;
+
     private List<List<GameObject>> _leftBatches = new List<List<GameObject>>();
     private List<List<GameObject>> _rightBatches = new List<List<GameObject>>();
 
@@ -92,6 +96,17 @@ public class GenerateDocument : MonoBehaviour
     public void SpawnBatch()
     {
         int currentDay = MainDataset.GetGroupIndex();
+
+        // --- INSTRUCTION TEXT CHECK ---
+        if (_tutorialInstructionText != null)
+        {
+            // Check if it is Day 1 (Index 0) AND Document 1 (Index 0)
+            bool isFirstDocOfDayOne = (currentDay == 0 && _localDocIndex == 0);
+
+            // This enables it if true, and disables it for every other document/day
+            _tutorialInstructionText.SetActive(isFirstDocOfDayOne);
+        }
+        // ------------------------------
 
         if (!MainDataset.HasMoreDocumentsInCurrentDay())
         {
@@ -172,6 +187,45 @@ public class GenerateDocument : MonoBehaviour
 
         _leftParent = GameObject.FindGameObjectWithTag("LeftDesk");
         _rightParent = GameObject.FindGameObjectWithTag("RightDesk");
+
+        // 1. Find the object (It MUST be checked as Active in the Inspector for this to work)
+        _tutorialInstructionText = GameObject.FindGameObjectWithTag("Instructions");
+        _tutorialParcelInstructionText = GameObject.FindGameObjectWithTag("ParcelInstructions");
+
+        // 2. If we found it, turn it OFF immediately so it doesn't show during the intro text.
+        // Your SpawnBatch() logic will turn it back ON at the exact right time.
+        if (_tutorialInstructionText != null && _tutorialParcelInstructionText != null)
+        {
+            _tutorialInstructionText.SetActive(false);
+            _tutorialParcelInstructionText.SetActive(false);
+        }
+    }
+
+    // Call this from anywhere to safely hide the tutorial text
+    public void HideTutorialText()
+    {
+        if (_tutorialInstructionText != null)
+        {
+            _tutorialInstructionText.SetActive(false);
+        }
+    }
+
+    public void HideParcelTutorialText()
+    {
+        // Changed to use the Parcel variable!
+        if (_tutorialParcelInstructionText != null)
+        {
+            _tutorialParcelInstructionText.SetActive(false);
+        }
+    }
+
+    public void ShowParcelTutorialText()
+    {
+        // Changed to use the Parcel variable!
+        if (_tutorialParcelInstructionText != null)
+        {
+            _tutorialParcelInstructionText.SetActive(true);
+        }
     }
 
 }

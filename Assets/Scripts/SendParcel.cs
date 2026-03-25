@@ -27,7 +27,7 @@ public class SendParcel : MonoBehaviour
     {
         transform.localPosition = new Vector3(transform.localPosition.x, _yHidden.position.y, transform.localPosition.z);
         _currentTargetY = _yHidden.position.y;
-        _textMeshPro.GetComponent<TextMeshProUGUI>().text = "Your actions will affect history\r\nAre you <color=#FFD402>SURE</color>?";
+        _textMeshPro.GetComponent<TextMeshProUGUI>().text = "Your actions will affect history\r\nAre you <color=#FFF540>SURE</color>?";
         _textMeshPro.SetActive(false);
     }
 
@@ -139,7 +139,14 @@ public class SendParcel : MonoBehaviour
         Destroy(parcel);
         foreach (GameObject doc in documents) Destroy(doc);
 
-        // Trigger next batch
-        GenerateDocument.OnSpawnNextBatch?.Invoke();
+        // --- LOGIC FOR VOICEMAIL DEPENDING ON DISCARD OR SEND DECISION ---
+        // 1. Try to find a Voicemail for "Send"
+        bool hasVoicemail = PalReactionsController.Instance.TryTriggerReaction("Send");
+
+        // 2. If no voicemail exists, just spawn the next document immediately
+        if (!hasVoicemail)
+        {
+            GenerateDocument.OnSpawnNextBatch?.Invoke();
+        }
     }
 }

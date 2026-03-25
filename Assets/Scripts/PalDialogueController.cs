@@ -96,7 +96,8 @@ public class PalDialogueController : MonoBehaviour
         _audioSource.Play();
 
         int lineIndex = 0;
-        while (_audioSource.isPlaying)
+        // This keeps the loop alive if the audio is paused (because time will be > 0)
+        while (_audioSource.isPlaying || _audioSource.time > 0f)
         {
             float currentTime = _audioSource.time;
             if (lineIndex < _currentLines.Count && currentTime >= _currentLines[lineIndex].startTime)
@@ -107,6 +108,7 @@ public class PalDialogueController : MonoBehaviour
             yield return null;
         }
 
+        _backgroundBox.sizeDelta = new Vector2(0, _backgroundBox.sizeDelta.y);
         _backgroundBox.gameObject.SetActive(false);
         _dialogueText.text = "";
 

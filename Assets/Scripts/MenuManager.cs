@@ -12,7 +12,8 @@ public class MenuManager : MonoBehaviour
     [SerializeField] private GameObject _startPaperPrefab;
     [SerializeField] private Transform _spawnPoint;
     [SerializeField] private string _firstSceneName = "Day1";
-    [SerializeField] private Transform _menuPaperTarget; // Drag your target transform here in the Inspector
+    [SerializeField] private Transform _menuPaperTarget; 
+    [SerializeField] private TMP_Text _textMeshPro;
 
     private void Awake()
     {
@@ -25,6 +26,7 @@ public class MenuManager : MonoBehaviour
     public void OnStartButtonClicked()
     {
         _startButton.SetActive(false);
+        _textMeshPro.text = "TYPE '<color=#FFF540>START</color>' THEN ENTER";
         SpawnStartPaper();
     }
 

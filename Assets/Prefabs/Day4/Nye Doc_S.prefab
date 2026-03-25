@@ -17,7 +17,7 @@ GameObject:
   - component: {fileID: 352476339569787492}
   m_Layer: 0
   m_Name: Nye Doc_S
-  m_TagString: Untagged
+  m_TagString: Document
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

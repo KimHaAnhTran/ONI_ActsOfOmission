@@ -41,6 +41,18 @@ public class PaperFadeExit : MonoBehaviour
 
     private IEnumerator ExitRoutine()
     {
+        int currentDay = MainDataset.GetGroupIndex();
+
+        // --- TIMING FIX ---
+        // Because GenerateDocument already incremented the index right after spawning, 
+        // the index for the very first document is now 1, not 0!
+        bool isFirstDocOfDayOne = (currentDay == 0 && GenerateDocument.GetCurrentIndex() == 1);
+
+        if (GenerateDocument.Instance != null && isFirstDocOfDayOne)
+        {
+            GenerateDocument.Instance.ShowParcelTutorialText();
+        }
+
         _isExiting = true;
 
         AudiopoolSFX.Instance.Play("SFX_PaperSlide");
@@ -83,6 +95,9 @@ public class PaperFadeExit : MonoBehaviour
 
             yield return null;
         }
+
+        
+        // ------------------------------
 
         // 3. Goodbye!
         Destroy(gameObject);
