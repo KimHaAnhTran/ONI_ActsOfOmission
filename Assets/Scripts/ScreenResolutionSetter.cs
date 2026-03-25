@@ -5,6 +5,10 @@ public class ScreenResolutionSetter : MonoBehaviour
 {
     private static GameObject _persistentBlackBarCam;
 
+    // --- NEW: Track the screen size ---
+    private int _lastWidth;
+    private int _lastHeight;
+
     private void Awake()
     {
         // 1. Handle the Black Bar Camera (Singleton Pattern)
@@ -32,22 +36,48 @@ public class ScreenResolutionSetter : MonoBehaviour
 
     private void Start()
     {
-        // Apply immediately to the current scene camera
+        // Record initial size and apply immediately
+        _lastWidth = Screen.width;
+        _lastHeight = Screen.height;
         ApplyToCurrentCamera();
+    }
+
+    // --- NEW: Detect Fullscreen / Resizing in real-time ---
+    private void Update()
+    {
+        // If the browser window resizes or the player enters Fullscreen, recalculate!
+        if (Screen.width != _lastWidth || Screen.height != _lastHeight)
+        {
+            _lastWidth = Screen.width;
+            _lastHeight = Screen.height;
+            ApplyToCurrentCamera();
+        }
     }
 
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
-        // Apply every time a new scene is loaded
         ApplyToCurrentCamera();
     }
 
     private void ApplyToCurrentCamera()
     {
-        Camera cam = Camera.main; // Finds the camera tagged "MainCamera"
+        Camera cam = Camera.main;
         if (cam != null)
         {
+            // --- NEW: Platform Detection ---
+#if UNITY_WEBGL
+            // This code ONLY compiles when building for WebGL
+            // It ensures the 16:9 ratio is forced inside the browser's fullscreen canvas
             ApplyAspectRatio(16f, 9f, cam);
+
+#elif UNITY_STANDALONE
+                // This code ONLY compiles when building for Windows/Mac/Linux .exe
+                ApplyAspectRatio(16f, 9f, cam);
+                
+#else
+                // Fallback for Editor or other platforms
+                ApplyAspectRatio(16f, 9f, cam);
+#endif
         }
     }
 
