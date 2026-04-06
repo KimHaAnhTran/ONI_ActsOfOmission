@@ -20,8 +20,11 @@ public class GameManager : MonoBehaviour
 
     // --- STAT TRACKING ---
     public static int TotalErrors { get; set; }
-    public static int TotalCharactersTyped { get; set; } // Change this from Words to Characters
+    public static int TotalCharactersTyped { get; set; } 
     public static float TotalTypingTime { get; set; }
+    
+    // Track how many documents timed out
+    public static int TotalLateDocuments { get; set; }
 
     // Use the standard 5-character-per-word formula
     public static float CurrentWPM => TotalTypingTime > 0
@@ -51,9 +54,13 @@ public class GameManager : MonoBehaviour
         _openingTextGroup.SetActive(true);
 
         MainDataset.CheckDay();
-        // Reset stats at the start of every new day/scene
+        // Reset stats
         TotalErrors = 0;
+        TotalCharactersTyped = 0;
         TotalTypingTime = 0;
+
+        // Reset late documents for the new day
+        TotalLateDocuments = 0;
     }
 
     // Called from VoicemailClick.cs
@@ -126,7 +133,8 @@ public class GameManager : MonoBehaviour
     private IEnumerator RevealResultsRoutine()
     {
         // 1. Prepare the numbers
-        _rightScoreText.text = $"{Mathf.RoundToInt(CurrentWPM)}\n{TotalErrors}";
+        int totalDocsToday = MainDataset.GetTotalDocumentsForCurrentDay();
+        _rightScoreText.text = $"{Mathf.RoundToInt(CurrentWPM)}\n{TotalErrors}\n{TotalLateDocuments}/{totalDocsToday}";
 
         // 2. Hide all children initially
         foreach (Transform child in _endTextGroup.transform)
@@ -190,12 +198,20 @@ public class GameManager : MonoBehaviour
     {
         // Call "OnSceneLoaded" every time a scene changes
         SceneManager.sceneLoaded += OnSceneLoaded;
+        TimerManager.OnTimerRanOut += HandleLateDocument;
     }
 
     private void OnDisable()
     {
         // Always unsubscribe when the object is disabled to prevent memory leaks
         SceneManager.sceneLoaded -= OnSceneLoaded;
+        TimerManager.OnTimerRanOut -= HandleLateDocument;
+    }
+
+    // Increment the late tracker when the signal fires ---
+    private void HandleLateDocument()
+    {
+        TotalLateDocuments++;
     }
 
     // Since GameManager.cs is not destroyed each scene, this must be the case
@@ -221,6 +237,9 @@ public class GameManager : MonoBehaviour
         TotalErrors = 0;
         TotalCharactersTyped = 0;
         TotalTypingTime = 0;
+
+        // Reset late documents for the new day
+        TotalLateDocuments = 0;
 
         // 3. UI Setup
         if (_endTextGroup != null) _endTextGroup.SetActive(false);

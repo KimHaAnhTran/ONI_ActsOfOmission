@@ -56,9 +56,11 @@ public class PaperFadeExit : MonoBehaviour
         _isExiting = true;
 
         AudiopoolSFX.Instance.Play("SFX_PaperSlide");
+        // Ask the TimerManager if we failed. 
+        bool isTimeout = (TimerManager.Instance != null && TimerManager.Instance.IsTimedOut);
 
-        // 1. Spawn the replacement object at the current position
-        if (_parcelSmallPrefab != null && _parcelPrefab != null)
+        // 1. ONLY Spawn the replacement object if we did NOT time out
+        if (_parcelSmallPrefab != null && _parcelPrefab != null && !isTimeout)
         {
             Vector3 newPosSmall = transform.position + new Vector3(0f, 0.5f, 0f);
             Vector3 newPos = transform.position + new Vector3(0f, 2f, 0f);

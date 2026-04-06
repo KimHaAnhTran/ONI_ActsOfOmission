@@ -80,14 +80,27 @@ public class TextType : MonoBehaviour
     {
         // Subscribe to OnCanTypeChanged, set up in TypewriterKey.cs
         TypewriterKey.OnCanTypeChanged += HandleCanTypeChanged;
+        // Listen for timeout
+        TimerManager.OnTimerRanOut += HandleTimeOut;
         _canType = TypewriterKey.CanType;
     }
 
     private void OnDisable()
     {
         TypewriterKey.OnCanTypeChanged -= HandleCanTypeChanged;
-        StopAllCoroutines(); // Stop text vibration
+        // --- NEW: Stop listening ---
+        TimerManager.OnTimerRanOut -= HandleTimeOut;
+        StopAllCoroutines();  // Stop text vibration
         transform.localPosition = _originalLocalPos;
+    }
+
+    // What to do when time runs out
+    private void HandleTimeOut()
+    {
+        _timerActive = false;
+        TypewriterKey.CanType = false; // Triggers the PaperFadeExit automatically
+        _textMesh.text = "";
+        _wordIndex = 0;
     }
 
     // Method subscribed to OnCanTypeChanged Action
@@ -119,9 +132,26 @@ public class TextType : MonoBehaviour
         _textMesh.text = ""; // Ensure it's empty during the wait
         yield return new WaitForSeconds(_startDelay);
         UpdateVisuals();
+
+        // Check if it's the first document of Day 1 before starting the timer
+        if (TimerManager.Instance != null && _allWords != null)
+        {
+            int currentDay = MainDataset.GetGroupIndex();
+
+            // Just like in PaperFadeExit, GenerateDocument increments its index right after spawning.
+            // So the very first document of Day 1 has an index of 1.
+            bool isFirstDocOfDayOne = (currentDay == 0 && GenerateDocument.GetCurrentIndex() == 1);
+
+            // Only start the timer if it is NOT the first document of Day 1
+            if (!isFirstDocOfDayOne)
+            {
+                TimerManager.Instance.StartTimer(_allWords.Length);
+            }
+        }
+        // --------------------------------------------------------------------------------
+
         _visualsCoroutine = null;
     }
-
     void Update()
     {
         if (!_canType || _allWords == null || _visualsCoroutine != null) return;
@@ -269,14 +299,17 @@ public class TextType : MonoBehaviour
         transform.localPosition = _originalLocalPos;
     }
 
-    // Document is finish trascribed
     private void FinishDocument()
     {
-        _timerActive = false; // Just stop the clock
+        _timerActive = false; 
+
+        // Player successfully finished, stop the timer!
+        if (TimerManager.Instance != null) TimerManager.Instance.StopTimer();
 
         TypewriterKey.CanType = false;
         _textMesh.text = "";
         OnCurrentDocumentFinished?.Invoke();
         _wordIndex = 0;
     }
+
 }

@@ -23,6 +23,7 @@ public class GenerateDocument : MonoBehaviour
     // The instruction text gameobject you want to show only on the first document of the first day
     private GameObject _tutorialInstructionText;
     private GameObject _tutorialParcelInstructionText;
+    private GameObject _timerText;
 
     private List<List<GameObject>> _leftBatches = new List<List<GameObject>>();
     private List<List<GameObject>> _rightBatches = new List<List<GameObject>>();
@@ -191,13 +192,18 @@ public class GenerateDocument : MonoBehaviour
         // 1. Find the object (It MUST be checked as Active in the Inspector for this to work)
         _tutorialInstructionText = GameObject.FindGameObjectWithTag("Instructions");
         _tutorialParcelInstructionText = GameObject.FindGameObjectWithTag("ParcelInstructions");
+        _timerText = GameObject.FindGameObjectWithTag("Timer");
 
         // 2. If we found it, turn it OFF immediately so it doesn't show during the intro text.
-        // Your SpawnBatch() logic will turn it back ON at the exact right time.
+        //  SpawnBatch() logic will turn it back ON at the exact right time.
         if (_tutorialInstructionText != null && _tutorialParcelInstructionText != null)
         {
             _tutorialInstructionText.SetActive(false);
             _tutorialParcelInstructionText.SetActive(false);
+        }
+
+        if (_timerText != null) {
+            _timerText.SetActive(false);
         }
     }
 

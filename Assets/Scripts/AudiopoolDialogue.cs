@@ -11,9 +11,22 @@ public class AudiopoolDialogue : MonoBehaviour
         if (Instance == null) Instance = this;
         else Destroy(gameObject);
 
-        // Optional: Preload everything in that folder
+        // Preload everything in that folder
         AudioClip[] clips = Resources.LoadAll<AudioClip>("Audio/Pal Dialogue");
-        foreach (var c in clips) _dialogueCache.Add(c.name, c);
+        foreach (var c in clips)
+        {
+            // Safe Add
+            // Check if the dictionary already has this name before adding it
+            if (!_dialogueCache.ContainsKey(c.name))
+            {
+                _dialogueCache.Add(c.name, c);
+            }
+            else
+            {
+                // This won't crash the game, but will warn in the console
+                Debug.LogWarning($"AudiopoolDialogue: Found a duplicate audio file named '{c.name}'! Ignoring the duplicate.");
+            }
+        }
     }
 
     public AudioClip GetClip(string clipName)

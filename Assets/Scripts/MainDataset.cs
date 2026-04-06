@@ -12,7 +12,7 @@ public static class MainDataset
     private static int _globalGroupIndex = 0; // The Row (Day)
     private static int _globalDocIndex = 0;   // The Column (Document within each Day)
 
-    private const string DocumentName = "Documents";
+    private const string DocumentName = "Sample";
 
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
     private static void Initialize()
@@ -168,5 +168,16 @@ public static class MainDataset
     public static int GetGroupIndex()
     {
         return _globalGroupIndex;
+    }
+
+    // Get Total Documents ---
+    public static int GetTotalDocumentsForCurrentDay()
+    {
+        // Check if the day exists, then return the total number of items in its list
+        if (_globalGroupIndex < DocumentGroups.Count)
+        {
+            return DocumentGroups[_globalGroupIndex].Count;
+        }
+        return 0;
     }
 }
