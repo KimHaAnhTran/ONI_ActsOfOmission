@@ -5,7 +5,7 @@ from google.oauth2 import service_account
 from googleapiclient.discovery import build
 
 # 1. SETTINGS - Update these!
-DOCUMENT_ID = 'YOUR_GOOGLE_DOC_ID_HERE' # Get this from your Doc URL
+DOCUMENT_ID = '1IBRIhuY1owJr_vjxCUqRBrvQjpv7g-7zO6q1hKyOhCY' # Get this from your Doc URL
 TARGET_TAB_NAME = 'Paper'
 OUTPUT_FILENAME = 'AP Research Paper_FINAL.pdf'
 
