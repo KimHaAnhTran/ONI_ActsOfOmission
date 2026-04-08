@@ -1,28 +1,37 @@
 name: Update PDF from Google Doc
 on:
   schedule:
-    - cron: '0 0 * * *' # Runs daily at midnight
-  workflow_dispatch: # Allows you to run it manually
+    - cron: '0 0 * * *'
+  workflow_dispatch:
 
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      # Updated to v4 to fix the Node.js deprecation warning
+      - uses: actions/checkout@v4 
+      
+      # Updated to v5
       - name: Set up Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
-          python-version: '3.x'
+          python-version: '3.11' 
+          
       - name: Install dependencies
-        run: pip install google-api-python-client google-auth-httplib2 google-auth-oauthlib requests
+        run: |
+          pip install --upgrade pip
+          pip install google-api-python-client google-auth-httplib2 google-auth-oauthlib requests
+
       - name: Run update script
         env:
           GOOGLE_SERVICE_ACCOUNT_JSON: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_JSON }}
         run: python update_pdf.py
+
       - name: Commit and Push
         run: |
           git config --global user.name 'github-actions'
           git config --global user.email 'action@github.com'
           git add "AP Research Paper_FINAL.pdf"
-          git commit -m "Update AP Research Paper from Google Docs" || exit 0
+          # The '|| true' prevents the workflow from failing if there are no changes to the doc
+          git commit -m "Update AP Research Paper from Google Docs" || true
           git push
