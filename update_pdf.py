@@ -2,10 +2,12 @@ import os
 import json
 import requests
 from google.oauth2 import service_account
+from pypdf import PdfReader, PdfWriter  # The splicing library
 
 # 1. SETTINGS
 DOCUMENT_ID = '1wq6BqfNt_V3_sW4-9rFOCUdqIuJFcYIvsHbIm9lBm2o'
 OUTPUT_FILENAME = 'AP Research Paper_FINAL.pdf'
+TEMP_FILENAME = 'temp_raw.pdf'
 
 def main():
     try:
@@ -18,21 +20,37 @@ def main():
         from google.auth.transport.requests import Request
         creds.refresh(Request())
 
-        # This is the "PC Download" URL structure
-        # It bypasses the mobile-style 'Tab 1' cover page entirely
+        # Download URL
         export_url = f"https://docs.google.com/document/d/{DOCUMENT_ID}/export?format=pdf"
-
-        # Download
-        print(f"Downloading from: {export_url}")
+        print(f"Downloading raw PDF...")
         response = requests.get(export_url, headers={'Authorization': f'Bearer {creds.token}'})
 
         if response.status_code == 200:
-            with open(OUTPUT_FILENAME, 'wb') as f:
+            # 1. Save the raw PDF (with the ugly Tab 1 page)
+            with open(TEMP_FILENAME, 'wb') as f:
                 f.write(response.content)
-            print(f"Success! {OUTPUT_FILENAME} updated. No tab headers found.")
+            
+            # 2. Splice it!
+            print("Splicing off the cover page...")
+            reader = PdfReader(TEMP_FILENAME)
+            writer = PdfWriter()
+
+            # Loop through all pages starting at index 1 (skipping index 0)
+            for i in range(1, len(reader.pages)):
+                writer.add_page(reader.pages[i])
+
+            # 3. Save the clean, final version
+            with open(OUTPUT_FILENAME, 'wb') as out_f:
+                writer.write(out_f)
+
+            # 4. Clean up the evidence
+            if os.path.exists(TEMP_FILENAME):
+                os.remove(TEMP_FILENAME)
+
+            print(f"Success! {OUTPUT_FILENAME} updated flawlessly.")
+            
         else:
             print(f"Export failed with status code: {response.status_code}")
-            print("Response text:", response.text)
             exit(1)
 
     except Exception as e:
