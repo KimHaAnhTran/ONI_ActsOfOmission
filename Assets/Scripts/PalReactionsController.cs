@@ -85,9 +85,9 @@ public class PalReactionsController : MonoBehaviour
 
         foreach (string line in lines)
         {
-            if (line.StartsWith("["))
+            if (line.StartsWith("("))
             {
-                int closeBracket = line.IndexOf(']');
+                int closeBracket = line.IndexOf(')');
                 if (closeBracket > 0)
                 {
                     string timeStr = line.Substring(1, closeBracket - 1);

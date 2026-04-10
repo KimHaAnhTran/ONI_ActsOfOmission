@@ -1,11 +1,11 @@
-[0:00] Good morning, sailor. Congratulations on your new job promotion. 
-[0:04] You are now the clerk for the Office of Naval Intelligence.
-[0:07] Your job is simple. We have agents across the country and world. 
-[0:12] Every day, they bring back news of domestic and international politics, 
-[0:16] snippets of newspapers, interviews, magazines.
-[0:19] Your job is to transcribe what these agents send in 
-[0:23] so our admirals, and subsequently our government, 
-[0:26] can make the necessary decisions. 
-[0:28] Once you've completed the report, send the parcel to us, 
-[0:32] or discard it, but only if it's detrimental. 
-[0:36] Good luck.
+(0:00) Good morning, sailor. Congratulations on your new job promotion. 
+(0:04) You are now the clerk for the Office of Naval Intelligence.
+(0:07) Your job is simple. We have agents across the country and world. 
+(0:10) Every day, they bring back news of domestic and international politics.
+(0:14) Snippets of newspapers, interviews, magazines.
+(0:17) Your job is to transcribe what these agents send in, 
+(0:20) so our admirals, and subsequently our government, can make the necessary decisions. 
+(0:26) Once you've completed the report, 
+(0:27) only send the parcel if it doesn't compromise us. 
+(0:31) There are things that we and the public don't need to know.
+(0:34) Good luck.
