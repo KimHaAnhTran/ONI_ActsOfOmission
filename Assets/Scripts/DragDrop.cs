@@ -15,6 +15,13 @@ public class DragDrop : MonoBehaviour
         get { return _isDragging; }
         set { _isDragging = value; }
     }
+
+    [Header("Screen Boundaries (Global)")]
+    // Set to the exact global coordinates you provided
+    private float _minX = -2.47f;
+    private float _maxX = 2.44f;
+    private float _minY = -1.43f;
+    private float _maxY = 1.42286f;
     private void Update()
     {
         // Convert mouse screen space to world coordinates
@@ -53,9 +60,15 @@ public class DragDrop : MonoBehaviour
     {
         if (!_isDragging) return;
 
-        // Apply movement while maintaining original Z depth
+        // 1. Calculate the raw target position based on the mouse
         float newXPos = _mousePosition.x - _dragOffset.x;
         float newYPos = _mousePosition.y - _dragOffset.y;
+
+        // 2. Clamp the raw position so it cannot exceed your screen boundaries
+        newXPos = Mathf.Clamp(newXPos, _minX, _maxX);
+        newYPos = Mathf.Clamp(newYPos, _minY, _maxY);
+
+        // 3. Apply the clamped movement while maintaining original Z depth
         transform.position = new Vector3(newXPos, newYPos, transform.position.z);
     }
 

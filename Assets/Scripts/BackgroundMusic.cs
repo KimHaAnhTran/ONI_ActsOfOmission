@@ -7,7 +7,7 @@ public class BackgroundMusic : MonoBehaviour
     [Header("Audio Settings")]
     [SerializeField] private AudioClip _musicTrack;
     [Range(0f, 1f)]
-    [SerializeField] private float _volume = 0.04f;
+    private float _volume = 0.04f;
     [SerializeField] private bool _playOnAwake = true;
 
     private AudioSource _audioSource;

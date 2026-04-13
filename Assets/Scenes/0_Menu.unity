@@ -4094,7 +4094,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _musicTrack: {fileID: 8300000, guid: da341bbbb62d1d544ac58603645ffd9f, type: 3}
-  _volume: 0.04
   _playOnAwake: 1
 --- !u!1 &1569375903
 GameObject:

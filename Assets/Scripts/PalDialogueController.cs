@@ -26,6 +26,10 @@ public class PalDialogueController : MonoBehaviour
     // Use this to limit how wide the box can grow before it starts wrapping text
     [SerializeField] private float _maxWidth = 600f;
 
+    // Adjustable volume control defaulting to 0.5f
+    [Range(0f, 1f)]
+    private float _audioVolume = 0.5f;
+
     private AudioSource _audioSource;
     private List<DialogueLine> _currentLines = new List<DialogueLine>();
 
@@ -93,6 +97,10 @@ public class PalDialogueController : MonoBehaviour
     {
         _backgroundBox.gameObject.SetActive(true);
         _audioSource.clip = clip;
+
+        // Apply the volume before playing
+        _audioSource.volume = _audioVolume;
+
         _audioSource.Play();
 
         int lineIndex = 0;

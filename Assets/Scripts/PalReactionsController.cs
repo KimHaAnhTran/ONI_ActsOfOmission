@@ -17,6 +17,10 @@ public class PalReactionsController : MonoBehaviour
     [SerializeField] private Vector2 _padding = new Vector2(0.2f, 0.01f);
     [SerializeField] private float _maxWidth = 3.5f;
 
+    [Range(0f, 1f)]
+    private float _audioVolume = 0.5f;
+
+    // Adjustable volume control defaulting to 0.5f
     private AudioSource _audioSource;
     private AudioClip _pendingAudio;
 
@@ -120,6 +124,10 @@ public class PalReactionsController : MonoBehaviour
         UpdateSubtitleBox(""); // Clear text initially
 
         _audioSource.clip = _pendingAudio;
+
+        // Apply the volume before playing
+        _audioSource.volume = _audioVolume;
+        _audioSource.Play();
 
         // Attempt to get volume from Audiopool if you have it set there, otherwise default to 1
         _audioSource.Play();
