@@ -18,7 +18,7 @@ public class TimerManager : MonoBehaviour
     private bool _isRunning = false;
 
     [Header("Timer Settings")]
-    [SerializeField] private float _gracePeriodSeconds = 10f;
+    private float _gracePeriodSeconds = 15f;
 
     // --- NEW: Variables for the flicker effect ---
     private Color _originalColor = Color.white;
@@ -86,10 +86,10 @@ public class TimerManager : MonoBehaviour
         // 1. Get the player's actual WPM
         float currentWPM = GameManager.CurrentWPM;
 
-        // 2. Custom Calculator: If no WPM is calculated yet, default to 20 seconds.
+        // 2. Custom Calculator: If no WPM is calculated yet, default to 120 seconds.
         if (currentWPM <= 0)
         {
-            _timeRemaining = 20f;
+            _timeRemaining = 120f;
         }
         else
         {

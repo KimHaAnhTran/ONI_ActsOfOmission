@@ -91,6 +91,7 @@ public static class MainDataset
 
         DocumentGroups.Clear();
 
+        // Parse Documents.txt and trim unnecessary \r and \n
         string[] allLines = textFile.text.Split(new[] { "\r\n", "\r", "\n" }, System.StringSplitOptions.None);
         List<string> currentGroup = new List<string>();
 
@@ -98,7 +99,7 @@ public static class MainDataset
         {
             string trimmedLine = line.Trim();
 
-            if (trimmedLine == "//")
+            if (trimmedLine == "//") // Each "//" represent each document group, for each day
             {
                 if (currentGroup.Count > 0)
                 {

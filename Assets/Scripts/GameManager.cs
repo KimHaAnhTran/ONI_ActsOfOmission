@@ -218,7 +218,6 @@ public class GameManager : MonoBehaviour
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
 
-        // --- NEW CLEANUP CHECK ---
         // If we have arrived at the final scene, this manager is no longer needed.
         if (scene.name == _endSceneName)
         {
@@ -235,8 +234,6 @@ public class GameManager : MonoBehaviour
 
         // 2. Reset stats
         TotalErrors = 0;
-        TotalCharactersTyped = 0;
-        TotalTypingTime = 0;
 
         // Reset late documents for the new day
         TotalLateDocuments = 0;

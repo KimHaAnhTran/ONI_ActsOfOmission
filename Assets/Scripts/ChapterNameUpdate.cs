@@ -26,6 +26,15 @@ public class ChapterNameUpdate : MonoBehaviour
         public string Year;
     }
 
+
+    private void Start()
+    {
+        // SceneManager.sceneLoaded does NOT fire for the very first scene when  hit Play.
+        // This forces the script to detect the Day and update the UI immediately
+        MainDataset.CheckDay();
+        UpdateChapterUI(MainDataset.GetGroupIndex());
+    }
+
     private void Awake()
     {
         if (Instance == null) Instance = this;

@@ -206,7 +206,6 @@ RectTransform:
   m_Children:
   - {fileID: 7945993246743118650}
   - {fileID: 2302696487429478524}
-  - {fileID: 1449350344907710616}
   - {fileID: 409273958412729031}
   - {fileID: 1751630990198848601}
   - {fileID: 1429351003220142307}
@@ -576,94 +575,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bdb73adb99ddbb842a5d2503d6978450, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!1 &5139393811933535397
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1449350344907710616}
-  - component: {fileID: 9081578196392694416}
-  - component: {fileID: 2776714432417382393}
-  - component: {fileID: 3872501774485243949}
-  m_Layer: 0
-  m_Name: Highlight
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!224 &1449350344907710616
-RectTransform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5139393811933535397}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -1}
-  m_LocalScale: {x: 0.33853, y: 0.36161998, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 6088236711924346362}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -0.0667, y: 0.275}
-  m_SizeDelta: {x: 2.9176, y: 0.1491}
-  m_Pivot: {x: 0.5, y: 0.5}
---- !u!222 &9081578196392694416
-CanvasRenderer:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5139393811933535397}
-  m_CullTransparentMesh: 1
---- !u!114 &2776714432417382393
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5139393811933535397}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 0.96060294, b: 0.254902, a: 1}
-  m_RaycastTarget: 1
-  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
-  m_Maskable: 1
-  m_OnCullStateChanged:
-    m_PersistentCalls:
-      m_Calls: []
-  m_Sprite: {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6, type: 3}
-  m_Type: 3
-  m_PreserveAspect: 0
-  m_FillCenter: 1
-  m_FillMethod: 0
-  m_FillAmount: 1
-  m_FillClockwise: 1
-  m_FillOrigin: 0
-  m_UseSpriteMesh: 0
-  m_PixelsPerUnitMultiplier: 1
---- !u!114 &3872501774485243949
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5139393811933535397}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bdb73adb99ddbb842a5d2503d6978450, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &6005703133586781306
 GameObject:
   m_ObjectHideFlags: 0
@@ -787,8 +698,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -0.1044, y: 0.34}
-  m_SizeDelta: {x: 2.6947, y: 0.1491}
+  m_AnchoredPosition: {x: -0.3936, y: 0.3444}
+  m_SizeDelta: {x: 0.9863, y: 0.1735}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &2545631436944996042
 CanvasRenderer:
@@ -1264,7 +1175,7 @@ MonoBehaviour:
   m_text: "I would like to say just a word about the Philippine and Cuban business:\r\n(1)
     We could <i>not</I> give Cuba back to Spain, that would be cowardly and dishonorable\r.\n(2)
     We could <I>not</i> turn the Filipinos over to France or Germany, our commercial
-    rivals in the Orient.\r\n(3) We could <i>not</i> leave them to themselves, tthey
+    rivals in the Orient.\r\n(3) We could <i>not</i> leave them to themselves, they
     were unfit for self-governance.\r\n(4) We, therefore, must educate them, uplift,
     civilize, and Christianize them.\r\nThe Philippines will stay on the map of the
     United States. And there it will stay while I am President!\r\n"
@@ -1468,7 +1379,7 @@ GameObject:
   - component: {fileID: 7383724715316665868}
   - component: {fileID: 6655190480428960084}
   m_Layer: 0
-  m_Name: InterviewTranscript
+  m_Name: InterviewTranscript_2
   m_TagString: Document
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
